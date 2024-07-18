@@ -1,0 +1,16 @@
+data = {
+    "professor": {
+        "stream": {
+            "semester": [
+                "subject"
+                ]
+            }
+    }
+}
+
+subject = {
+    "Type": "",
+    "Workload": "",
+    "Subject": "",
+    "Options": {}
+}

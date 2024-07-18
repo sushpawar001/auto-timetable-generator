@@ -36,8 +36,8 @@ const routes = [
         icon: <FaChalkboardTeacher />,
     },
     {
-        name: "Streams",
-        path: "/streams",
+        name: "Subjects",
+        path: "/subjects",
         icon: <FaBookReader />,
     },
     {
@@ -53,16 +53,17 @@ const routes = [
 ];
 
 export default function Navbar() {
+    // bg-zinc-900
     return (
-        <div className="h-full w-2/12 rounded-2xl bg-black flex flex-col justify-center text-white text-xl gap-4 pl-5">
-            <div className="mb-10">
-                <p>Logo here</p>
+        <div className="h-full bg-neutral-950 flex flex-col text-white text-xl gap-4 px-5 w-2/12 p-10 font-custom">
+            <div className="mb-10 text-2xl p-1 pt-2.5 font-bold text-primary-100">
+                <p>Timetable App</p>
             </div>
             {routes.map((route) => (
                 <NavLink
                     key={route.name}
                     to={route.path}
-                    className="flex items-center gap-3 hover:text-primary"
+                    className="flex items-center gap-3 hover:bg-primary rounded p-1 pl-2 duration-300"
                 >
                     <span>{route.icon}</span>
                     <span>{route.name}</span>

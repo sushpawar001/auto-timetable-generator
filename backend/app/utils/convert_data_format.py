@@ -1,7 +1,7 @@
 from app.models.subject_model import SubjectModel
 
 
-def convert_data_format(subjects: list[SubjectModel]):
+def convert_data_format_tt(subjects: list[dict]):
     new_dict = {}  # dictionary to store new data
     for row in subjects:
         prof: str = row["professor"].strip()
@@ -63,3 +63,9 @@ def add_prof_new_dict(prof, year_dept, new_dict) -> None:
 
     if year_dept not in new_dict[prof]:
         new_dict[prof][year_dept] = []
+
+def convert_data_format_settings(settings: list[dict]):
+    new_dict = {}
+    for row in settings:
+        new_dict[row["department"]] = row
+    return new_dict

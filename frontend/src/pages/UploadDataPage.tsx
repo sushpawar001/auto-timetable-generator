@@ -105,7 +105,9 @@ export default function UploadDataPage() {
                 readString(csvData, {
                     header: true,
                     complete: (results) => {
-                        setJsonData(results.data as JsonResult[]);
+                        // setJsonData(results.data as JsonResult[]);
+                    const filteredData = results.data.filter(row => Object.values(row).some(value => value !== null && value !== ""));
+                    setJsonData(filteredData as JsonResult[]);
                     },
                 });
             };
@@ -118,7 +120,8 @@ export default function UploadDataPage() {
             console.log("jsonData", jsonData);
             const response = await axios.post(
                 `${apiUrl}/timetable/upload-csv`,
-                jsonData
+                jsonData,
+                { withCredentials: true }
             );
             console.log(response.data);
         }
@@ -139,7 +142,7 @@ export default function UploadDataPage() {
     });
 
     return (
-        <div className={`py-10 px-5 flex flex-col h-full justify-center`}>
+        <div className={`py-10 px-5 flex flex-col h-full justify-center rounded-2xl shadow-lg bg-white`}>
             <div className="text-center mb-3">
                 <h2 className="text-3xl font-bold mb-1">Upload Data</h2>
                 <p className="text-lg">
