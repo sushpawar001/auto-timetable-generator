@@ -63,10 +63,10 @@ export default function Navbar() {
                 <NavLink
                     key={route.name}
                     to={route.path}
-                    className="flex items-center gap-3 hover:bg-primary rounded p-1 pl-2 duration-300"
+                    className="flex gap-3 hover:bg-primary rounded p-1 pl-2 duration-300 items-center "
                 >
-                    <span>{route.icon}</span>
-                    <span>{route.name}</span>
+                    <span className="text-2xl">{route.icon}</span>
+                    <span className="text-lg">{route.name}</span>
                 </NavLink>
             ))}
         </div>

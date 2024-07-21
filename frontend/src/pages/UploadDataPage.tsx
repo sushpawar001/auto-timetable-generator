@@ -7,6 +7,8 @@ import {
     getCoreRowModel,
     useReactTable,
 } from "@tanstack/react-table";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 interface JsonResult {
     [key: string]: string | number | boolean | null;
@@ -94,7 +96,7 @@ export default function UploadDataPage() {
     const [jsonData, setJsonData] = useState<JsonResult[] | null>(null);
     const { readString } = usePapaParse();
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
-
+    const navigate = useNavigate();
     const handleFileChange = (e) => {
         const file = e.target.files[0];
 
@@ -106,8 +108,12 @@ export default function UploadDataPage() {
                     header: true,
                     complete: (results) => {
                         // setJsonData(results.data as JsonResult[]);
-                    const filteredData = results.data.filter(row => Object.values(row).some(value => value !== null && value !== ""));
-                    setJsonData(filteredData as JsonResult[]);
+                        const filteredData = results.data.filter((row) =>
+                            Object.values(row).some(
+                                (value) => value !== null && value !== ""
+                            )
+                        );
+                        setJsonData(filteredData as JsonResult[]);
                     },
                 });
             };
@@ -117,13 +123,26 @@ export default function UploadDataPage() {
 
     const handleUpload = async () => {
         if (jsonData) {
-            console.log("jsonData", jsonData);
-            const response = await axios.post(
-                `${apiUrl}/timetable/upload-csv`,
-                jsonData,
-                { withCredentials: true }
-            );
-            console.log(response.data);
+            try {
+                const response = await axios.post(
+                    `${apiUrl}/subjects/upload-csv`,
+                    jsonData,
+                    { withCredentials: true }
+                );
+                if (response.status === 200) {
+                    console.log("Data uploaded successfully");
+                    toast.success("Data uploaded successfully!");
+                    navigate("/subjects");
+                } else {
+                    console.error(
+                        "Error uploading data: ",
+                        response.statusText
+                    );
+                    toast.error("Error uploading data: " + response.statusText);
+                }
+            } catch (error) {
+                console.error("Error uploading data: ", error);
+            }
         }
     };
 
@@ -142,11 +161,16 @@ export default function UploadDataPage() {
     });
 
     return (
-        <div className={`py-10 px-5 flex flex-col h-full justify-center rounded-2xl shadow-lg bg-white`}>
+        <div
+            className={`py-10 px-5 flex flex-col h-full justify-center rounded-2xl shadow-lg bg-white`}
+        >
             <div className="text-center mb-3">
-                <h2 className="text-3xl font-bold mb-1">Upload Data</h2>
-                <p className="text-lg">
-                    Please upload data in .csv or .xlsx format
+                <h2 className="text-3xl font-bold mb-1.5 font-custom text-primary-950">
+                    Upload Data
+                </h2>
+                <p className="">Please upload data in .csv or .xlsx format</p>
+                <p className="">
+                    Note: Uploading data will delete all existing data
                 </p>
             </div>
 
@@ -196,14 +220,17 @@ export default function UploadDataPage() {
             </div>
 
             {jsonData ? (
-                <div className="mt-4 pr-2 overflow-y-scroll">
-                    <div className="bg-green-200 border border-slate-600 rounded-lg">
-                        <table>
+                <div className="mt-4 h-full overflow-y-auto pr-2">
+                    <div>
+                        <table className="w-full">
                             <thead>
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <tr key={headerGroup.id}>
                                         {headerGroup.headers.map((header) => (
-                                            <th key={header.id}>
+                                            <th
+                                                key={header.id}
+                                                className="border border-slate-300 p-1 text-center font-bold bg-primary-700 text-white h-10 font-custom"
+                                            >
                                                 {" "}
                                                 {header.isPlaceholder
                                                     ? null
@@ -220,17 +247,27 @@ export default function UploadDataPage() {
                             <tbody>
                                 {table.getRowModel().rows.map((row) => (
                                     <tr key={row.id}>
-                                        {row.getVisibleCells().map((cell) => (
-                                            <td
-                                                key={cell.id}
-                                                className="border-b border-slate-600 p-0.5 text-base"
-                                            >
-                                                {flexRender(
-                                                    cell.column.columnDef.cell,
-                                                    cell.getContext()
-                                                )}
-                                            </td>
-                                        ))}
+                                        {row
+                                            .getVisibleCells()
+                                            .map((cell, index) => (
+                                                <td
+                                                    key={cell.id}
+                                                    className={`border border-primary-300 p-1 px-2 ${
+                                                        index ===
+                                                        row.getVisibleCells()
+                                                            .length -
+                                                            1
+                                                            ? ""
+                                                            : "hover:border-primary-600 hover:border-2"
+                                                    }`}
+                                                >
+                                                    {flexRender(
+                                                        cell.column.columnDef
+                                                            .cell,
+                                                        cell.getContext()
+                                                    )}
+                                                </td>
+                                            ))}
                                     </tr>
                                 ))}
                             </tbody>

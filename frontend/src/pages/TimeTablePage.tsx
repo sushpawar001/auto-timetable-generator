@@ -50,18 +50,6 @@ export default function TimeTablePage() {
         setNumberOfLectures(filteredTimeTable["Mon"].length);
     }, [filteredTimeTable]);
 
-    const deleteAllData = async () => {
-        try {
-            const response = await axios.delete(
-                `${import.meta.env.VITE_BACKEND_URL}/subjects/delete-all`,
-                { withCredentials: true }
-            );
-            console.log(response.data);
-        } catch (error) {
-            console.error("Error deleting data:", error);
-        }
-    };
-
     return (
         <div className="h-full flex flex-col gap-3">
             <div className="w-full flex gap-3">

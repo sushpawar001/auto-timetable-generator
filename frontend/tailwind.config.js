@@ -25,5 +25,10 @@ export default {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        require("daisyui"),
+        require("tailwind-scrollbar")({
+            nocompatible: true,
+        }),
+    ],
 };

@@ -7,27 +7,38 @@ import RegisterPage from "./pages/AuthPages/RegisterPage";
 import AuthLayout from "./pages/AuthPages/AuthLayout";
 import LoginPage from "./pages/AuthPages/LoginPage";
 import SubjectsPage from "./pages/SubjectsPage";
-import TestPage from "./pages/TestPage";
+import SubjectEditPage from "./pages/SubjectEditPage";
+import { Toaster } from "react-hot-toast";
+
 function App() {
     // bg-[#100f14]
     return (
-        <Router>
-            <Routes>
-                <Route path="/test" element={<TestPage />} />
-                <Route element={<AuthLayout />}>
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                </Route>
-                <Route path="/" element={<DashboardPage />}>
-                    <Route index element={<HomePage />} />
-                    <Route path="/timetable" element={<TimeTablePage />} />
-                    <Route path="/subjects" element={<SubjectsPage />} />
-                    <Route path="/upload-data" element={<UploadDataPage />} />
+        <>
+            <Router>
+                <Routes>
+                    <Route element={<AuthLayout />}>
+                        <Route path="/register" element={<RegisterPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                    </Route>
+                    <Route path="/" element={<DashboardPage />}>
+                        <Route index element={<HomePage />} />
+                        <Route path="/timetable" element={<TimeTablePage />} />
+                        <Route path="/subjects" element={<SubjectsPage />} />
+                        <Route
+                            path="/subjects/edit/:id"
+                            element={<SubjectEditPage />}
+                        />
+                        <Route
+                            path="/upload-data"
+                            element={<UploadDataPage />}
+                        />
 
-                    <Route path="*" element={<p>Page Not Found</p>} />
-                </Route>
-            </Routes>
-        </Router>
+                        <Route path="*" element={<p>Page Not Found</p>} />
+                    </Route>
+                </Routes>
+            </Router>
+            <Toaster position="bottom-right" reverseOrder={false} />
+        </>
     );
 }
 

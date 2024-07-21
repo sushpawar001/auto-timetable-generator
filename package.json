@@ -4,8 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cd frontend && npm run dev"
+    "dev": "concurrently \"npm:backend\" \"npm:frontend\"",
+    "backend": "cd backend && fastapi dev app/main.py",
+    "frontend": "cd frontend && npm run dev"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
 }
