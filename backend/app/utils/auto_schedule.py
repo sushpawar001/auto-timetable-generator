@@ -1,4 +1,5 @@
 import datetime as dt
+import json
 
 
 def create_timetable_struct(all_years: list[str]) -> dict[str, dict[str, list]]:
@@ -46,9 +47,7 @@ def get_all_departments(settings: dict[str, dict]) -> list[str]:
 
 def auto_schedule(
     professor_dict: dict[str, dict[str, list]],
-    # all_years: list[str],
     settings: dict[str, dict],
-    # all_departments: list[str],
 ):
     """
     Generate a timetable schedule based on the availability of professors
@@ -194,7 +193,9 @@ def generate_daily_schedule(
         subtype = determine_subtype(lec_num, practical_slots, pract_attepts, queue_len)
 
         if is_prof_available and can_scheduled:
-            subject = get_professor_subject_by_year_and_type(profs, professors_queue[0], year, subtype=subtype)
+            subject = get_professor_subject_by_year_and_type(
+                profs, professors_queue[0], year, subtype=subtype
+            )
             if subject and get_subject_workload(
                 professors_queue[0], year, subject, subtype, profs
             ):
@@ -472,3 +473,202 @@ def get_professor_subject_by_year_and_type(
                 return subject["subject"]
 
     return None
+
+
+##################
+
+
+def get_time_slots_by_prof(
+    professor: str, profs: dict[str, dict[str, list]], settings: dict[str, dict]
+) -> list[str]:
+    """
+    Retrieves max time slots for a given professor.
+
+    Args:
+        professor (str): The name of the professor.
+        profs: All professors data
+        settings: All settings data
+
+    Returns:
+        list[str]: max time slots for a given professor
+    """
+    all_departments = get_all_departments(settings)
+    departments = get_departments_by_prof(professor, profs, all_departments)
+    time_slots = [get_time_slots(department, settings) for department in departments]
+
+    return max(time_slots, key=len)
+
+
+def get_departments_by_prof(
+    professor: str, profs: dict[str, dict[str, list]], all_departments: list[str]
+) -> set[str]:
+    """
+    Retrieves the departments associated with a given professor.
+
+    Args:
+        professor (str): The name of the professor.
+        profs: All professors data
+        all_departments (list[str]): List of all departments.
+
+    Returns:
+        set[str]: A set of department names.
+    """
+
+    years = profs[professor].keys()
+    departments: set[str] = {
+        get_department_by_year(year, all_departments) for year in years
+    }
+
+    return departments
+
+
+def get_time_slots(department: str, settings: dict[str, dict]) -> list[str]:
+    """
+    Retrieves the time slots for a given department.
+
+    Args:
+        department (str): The department to retrieve the time slots for.
+
+    Returns:
+        list[str]: A list of time slots in the format "%H:%M %p".
+
+    """
+
+    start_time, end_time, minutes_lecture = get_department_time(department, settings)
+    no_of_lectures = calc_college_time(start_time, end_time, minutes_lecture)
+    temp_time: dt.datetime = start_time
+    time_slots: list[str] = []
+
+    for _ in range(no_of_lectures):
+        time_slots.append(f"{temp_time:%H:%M %p}")
+        temp_time = temp_time + dt.timedelta(minutes=minutes_lecture)
+
+    return time_slots
+
+
+###################
+###################
+
+struct = {
+    "professor": {
+        "day": [
+            {
+                "subject": str,
+                "subtype": str,
+                "department": str,
+            }
+        ]
+    },
+}
+
+
+def create_one_professor_timetable(
+    professor: str, timetable: dict[str, dict[str, list]]
+):
+    days = list(timetable.values())[0].keys()
+    departments = list(timetable.keys())
+    professor_timetable = {}
+
+    for day in days:
+        professor_timetable[day] = []
+
+
+def create_professors_timetable(
+    professors: list[str], timetable: dict[str, dict[str, list]]
+):
+    """
+    Retrieves the timetable for a given professor.
+    """
+    days = list(timetable.values())[0].keys()
+    departments = list(timetable.keys())
+    professor_timetable = {}
+
+    for professor in professors:
+        professor_timetable[professor] = {}
+        for day in days:
+            professor_timetable[professor][day] = []
+
+            for department in departments:
+                lectures = timetable[department][day]
+                print(lectures)
+                for lecture in lectures:
+                    if professor in lecture["professor"]:
+                        professor_timetable[professor][day].append(
+                            {
+                                "subject": lecture["subject"],
+                                "subtype": lecture["subtype"],
+                                "department": department,
+                            }
+                        )
+
+    return professor_timetable
+
+
+def get_no_of_lectures(department_settings: dict):
+    today: dt.datetime = dt.datetime.now()
+    minutes_lecture: int = department_settings["minutes_lecture"]
+    start_time = dt.datetime.strptime(department_settings["start_time"], "%H:%M")
+    end_time = dt.datetime.strptime(department_settings["end_time"], "%H:%M")
+
+    start_time = dt.datetime.combine(today.date(), start_time.time())
+    end_time = dt.datetime.combine(today.date(), end_time.time())
+
+    college_time = end_time - start_time
+    minutesofcollege = college_time.total_seconds() / 60.0
+    no_of_lectures = int(minutesofcollege // minutes_lecture)
+
+    return no_of_lectures
+
+
+def get_lecs_by_day_lec_num(day, lec_num, timetable: dict[str, dict[str, list]]):
+    lecs = []
+    for year, year_data in timetable.items():
+        data = year_data[day][lec_num]
+        data["department"] = year
+        lecs.append(data)
+
+    return lecs
+
+
+def create_professors_timetable2(
+    professors: list[str],
+    timetable: dict[str, dict[str, list]],
+    departments_settings: list[dict],
+):
+    """
+    Retrieves the timetable for a given professor.
+    """
+    days = list(timetable.values())[0].keys()
+    departments = list(timetable.keys())
+    departments_lecs = {
+        department["department"]: get_no_of_lectures(department)
+        for department in departments_settings
+    }
+    # departments_lecs = get_no_of_lectures(departments_settings[0])
+    professor_timetable = {}
+    max_lecs = max(departments_lecs.values())
+    # print(timetable)
+    for professor in professors:
+        professor_timetable[professor] = {}
+        for day in days:
+            professor_timetable[professor][day] = {}
+
+    for day in days:
+        for lec_num in range(max_lecs):
+            lecs = get_lecs_by_day_lec_num(day, lec_num, timetable)
+            for lecture in lecs:
+                is_optional_lecture = len(lecture["professor"].split("/")) > 1
+                
+                if is_optional_lecture:
+                    optional_professors = lecture["professor"].split("/")
+                    for optional_professor in optional_professors:
+                        professor_timetable[optional_professor.strip()][day][lec_num] = lecture
+                    lecture.pop("professor")
+
+                elif lecture["professor"] == "Empty Slot":
+                    pass
+                else:
+                    professor_timetable[lecture["professor"]][day][lec_num] = lecture
+                    lecture.pop("professor")
+    
+    return professor_timetable, max_lecs

@@ -6,6 +6,8 @@ from app.utils.auth_helpers import decode_access_token
 from bson.objectid import ObjectId
 from app.models.subject_model import SubjectModelInput, DepartmentSettings
 from typing import List
+from app.utils.api_timetable_utils import create_timetable, store_timetable
+from app.db.config import timetable_collection
 
 subjects_router = APIRouter()
 
@@ -70,6 +72,9 @@ async def update_subject(
 
     result["_id"] = str(result["_id"])
 
+    timetable = create_timetable(user_id)
+    store_timetable(user_id, timetable)
+
     return {"status": "success", "data": result}
 
 
@@ -83,6 +88,10 @@ async def delete_subject(subject_id: str, access_token: str = Cookie()):
     )
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Subject not found")
+    
+    timetable = create_timetable(user_id)
+    store_timetable(user_id, timetable)
+
     return {"status": "success"}
 
 
@@ -97,6 +106,8 @@ async def delete_all_subjects_and_settings(access_token: str = Cookie()):
 
     # Delete all department settings for the user
     settings_result = department_settings_collection.delete_many({"user_id": user_id})
+
+    timetable_collection.delete_many({"user_id": user_id})
 
     return {
         "status": "success",
@@ -148,6 +159,9 @@ async def get_csv_data(subjects: List[SubjectModelInput], access_token: str = Co
     department_settings_result = department_settings_collection.insert_many(
         department_settings
     )
+
+    timetable = create_timetable(user_id)
+    store_timetable(user_id, timetable)
 
     if subject_result.acknowledged and department_settings_result.acknowledged:
         return {"status": "success"}

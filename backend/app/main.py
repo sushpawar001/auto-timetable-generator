@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.api.timetable_router import timetable_router
 from app.api.auth import auth_router
+from app.api.professor_router import professor_router
 from starlette.middleware.base import BaseHTTPMiddleware
 from app.api.subjects_router import subjects_router
 from fastapi.middleware.gzip import GZipMiddleware
@@ -41,9 +42,10 @@ app.add_middleware(
 
 app.add_middleware(GZipMiddleware)
 
-app.include_router(auth_router)
-app.include_router(timetable_router)
-app.include_router(subjects_router)
+app.include_router(auth_router, tags=["auth"])
+app.include_router(timetable_router, tags=["timetable"])
+app.include_router(subjects_router, tags=["subjects"])
+app.include_router(professor_router, tags=["professor"])
 
 
 if __name__ == "__main__":

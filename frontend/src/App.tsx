@@ -9,6 +9,7 @@ import LoginPage from "./pages/AuthPages/LoginPage";
 import SubjectsPage from "./pages/SubjectsPage";
 import SubjectEditPage from "./pages/SubjectEditPage";
 import { Toaster } from "react-hot-toast";
+import ProfessorsPage from "./pages/ProfessorsPage";
 
 function App() {
     // bg-[#100f14]
@@ -32,7 +33,10 @@ function App() {
                             path="/upload-data"
                             element={<UploadDataPage />}
                         />
-
+                        <Route
+                            path="/professors"
+                            element={<ProfessorsPage />}
+                        />
                         <Route path="*" element={<p>Page Not Found</p>} />
                     </Route>
                 </Routes>

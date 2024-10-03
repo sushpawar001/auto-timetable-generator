@@ -1,6 +1,12 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
+type subjectType = {
+    subject: string;
+    subtype: string;
+    professor: string;
+};
+
 export default function TimeTablePage() {
     const [timeTable, setTimeTable] = useState({
         Mon: [],
@@ -29,7 +35,7 @@ export default function TimeTablePage() {
             { withCredentials: true }
         );
         console.log(response.data);
-        setDepartments(Object.keys(response.data.data));
+        setDepartments(Object.keys(response.data.data).sort());
         setTimeTable(response.data.data);
         if (selectedDepartment === "") {
             setSelectedDepartment(Object.keys(response.data.data)[0]);
@@ -78,7 +84,7 @@ export default function TimeTablePage() {
                 <div className="w-full h-full">
                     <table className="w-full h-full">
                         <thead>
-                            <tr>
+                            <tr className="divide-x divide-gray-300">
                                 {[
                                     "Mon",
                                     "Tue",
@@ -90,7 +96,7 @@ export default function TimeTablePage() {
                                     return (
                                         <th
                                             key={day}
-                                            className="border border-slate-300 p-1 text-center font-bold bg-primary-700 text-white h-10 font-custom"
+                                            className="p-1 text-center font-bold bg-gray-700 text-white h-10 font-custom"
                                         >
                                             {day}
                                         </th>
@@ -114,32 +120,27 @@ export default function TimeTablePage() {
                                             ].map((day) => {
                                                 const subObj =
                                                     filteredTimeTable[day][i];
+                                                const isFreeLecture =
+                                                    subObj["subject"] ===
+                                                    "Empty Slot";
                                                 return (
                                                     <td
-                                                        className={`border border-primary-300 p-1 text-center w-1/6 hover:border-primary-700 hover:border-2 text-sm ${
-                                                            subObj[
-                                                                "subject"
-                                                            ] === "Empty Slot"
-                                                                ? "bg-red-100"
+                                                        className={`border border-gray-400 py-0.5 px-1 text-center w-1/6 hover:border-primary-700 hover:border-2 text-sm h-${numberOfLectures} ${
+                                                            isFreeLecture
+                                                                ? "bg-gray-100 hover:border-gray-400"
                                                                 : "hover:bg-primary-100"
                                                         }`}
                                                         key={day + "-" + i}
                                                     >
-                                                        <p>
-                                                            {subObj["subject"]}
-                                                        </p>
-                                                        <p>
-                                                            {
-                                                                subObj[
-                                                                    "professor"
-                                                                ]
-                                                            }
-                                                        </p>
-                                                        <p>
-                                                            ({" "}
-                                                            {subObj["subtype"]}{" "}
-                                                            )
-                                                        </p>
+                                                        {isFreeLecture ? (
+                                                            <p className="text-sm font-medium text-gray-400">
+                                                                Free Lecture
+                                                            </p>
+                                                        ) : (
+                                                            <SubjectSlot
+                                                                data={subObj}
+                                                            />
+                                                        )}
                                                     </td>
                                                 );
                                             })}
@@ -152,5 +153,15 @@ export default function TimeTablePage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export function SubjectSlot({ data }: { data: subjectType }) {
+    return (
+        <>
+            <p className="text-sm font-medium">{data.subject}</p>
+            <p className="text-sm text-gray-600 mt-0.5">{data.professor}</p>
+            <p className="text-xs text-gray-600">({data.subtype})</p>
+        </>
     );
 }

@@ -31,8 +31,8 @@ const routes = [
         icon: <FaCloudUploadAlt />,
     },
     {
-        name: "Teachers",
-        path: "/teachers",
+        name: "Professors",
+        path: "/professors",
         icon: <FaChalkboardTeacher />,
     },
     {
