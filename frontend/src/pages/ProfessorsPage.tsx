@@ -1776,8 +1776,8 @@ export default function ProfessorsPage() {
     return (
         <div className="h-full gap-3 flex flex-col">
             <div className="flex flex-grow gap-3">
-                <div className="bg-primary-700 rounded-md w-1/4 flex items-center p-1.5 shadow-md">
-                    <h1 className="text-2xl font-bold pl-4 text-white font-custom">
+                <div className="bg-white rounded-md w-1/4 flex items-center p-1.5 shadow-md">
+                    <h1 className="text-2xl font-bold pl-4 text-primary-950 font-custom">
                         Professors
                     </h1>
                 </div>
@@ -1807,7 +1807,7 @@ export default function ProfessorsPage() {
                                         return (
                                             <th
                                                 key={day}
-                                                className="p-1 text-center font-bold bg-gray-700 text-white h-10 font-custom"
+                                                className="p-1 text-center font-bold bg-gray-500 text-white h-10 font-custom"
                                             >
                                                 {day}
                                             </th>

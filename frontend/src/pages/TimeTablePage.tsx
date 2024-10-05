@@ -96,7 +96,7 @@ export default function TimeTablePage() {
                                     return (
                                         <th
                                             key={day}
-                                            className="p-1 text-center font-bold bg-gray-700 text-white h-10 font-custom"
+                                            className="p-1 text-center font-bold bg-gray-500 text-white h-10 font-custom"
                                         >
                                             {day}
                                         </th>

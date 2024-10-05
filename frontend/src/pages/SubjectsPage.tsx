@@ -10,8 +10,8 @@ import {
     getFacetedRowModel,
     getFacetedUniqueValues,
 } from "@tanstack/react-table";
-import { FaEdit } from "react-icons/fa";
-import { FaDeleteLeft, FaTrashCan } from "react-icons/fa6";
+import { LuPenSquare, LuTrash2, LuRotateCcw } from "react-icons/lu";
+
 import ToolTip from "../components/ToolTip";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 import { Subject } from "../types/subjectType";
@@ -67,7 +67,7 @@ export default function SubjectsPage() {
                                 deleteSubject(cell.row.original._id);
                             }}
                         >
-                            <FaTrashCan className="w-4 h-4" />
+                            <LuTrash2 className="w-4 h-4" />
                         </button>
                         <button
                             className="border border-primary-700 p-1 text-primary-700 rounded-md hover:bg-primary-600 hover:text-white duration-300"
@@ -76,7 +76,7 @@ export default function SubjectsPage() {
                                 editSubject(cell.row.original._id);
                             }}
                         >
-                            <FaEdit className="w-4 h-4" />
+                            <LuPenSquare className="w-4 h-4" />
                         </button>
                     </div>
                 ),
@@ -150,14 +150,14 @@ export default function SubjectsPage() {
 
     return (
         <div className="h-full gap-3 flex flex-col">
-            <div className="flex flex-grow gap-3">
-                <div className="bg-primary-700 rounded-md w-1/4 flex items-center p-1.5 shadow-md">
-                    <h1 className="text-2xl font-bold pl-4 text-white font-custom">
+            <div className="flex flex-grow gap-2.5">
+                <div className="bg-white rounded-md w-1/4 flex items-center p-1.5 shadow-md">
+                    <h1 className="text-2xl font-bold pl-4 text-primary-950 font-custom">
                         Subjects
                     </h1>
                 </div>
-                <div className="border-2 border-primary-700 rounded-full flex items-center justify-center p-1.5 shadow-md text-center">
-                    <h3 className="font-semibold text-primary-700 font-custom text-sm">
+                <div className="bg-white rounded-md flex items-center justify-center p-1.5 shadow-md text-center">
+                    <h3 className="text-sm">
                         Total Subjects:{" "}
                         <span className="font-bold">{subjects.length}</span>
                     </h3>
@@ -179,7 +179,7 @@ export default function SubjectsPage() {
                     placeholder="Select Subject Type"
                 />
                 <div className="bg-secondary rounded-md flex justify-center items-center p-1 shadow-md aspect-square border-2 border-red-500 text-red-500 hover:bg-red-600 hover:text-white hover:border-red-600 duration-300 cursor-pointer hover:scale-105 relative group">
-                    <FaDeleteLeft className="w-6 h-6" />
+                    <LuRotateCcw className="w-6 h-6" />
                     <ToolTip
                         content={
                             <span className="text-sm">Clear All Filters</span>
@@ -195,7 +195,7 @@ export default function SubjectsPage() {
                         modal?.showModal();
                     }}
                 >
-                    <FaTrashCan className="w-5 h-5 text-white" />
+                    <LuTrash2 className="w-6 h-6 text-white" />
                     <ToolTip
                         content={
                             <span className="text-sm">
@@ -207,20 +207,23 @@ export default function SubjectsPage() {
                     />
                 </div>
             </div>
-            <div className="p-5 h-[90%] bg-white rounded-md shadow-lg">
+            <div className="p-5 h-full bg-white rounded-md shadow-lg overflow-y-auto">
                 <div className="h-full overflow-y-auto pr-2 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-gray-700 scrollbar-track-gray-300">
                     <div>
                         <table className="w-full">
                             <thead>
                                 {table.getHeaderGroups().map((headerGroup) => {
                                     return (
-                                        <tr key={headerGroup.id}>
+                                        <tr
+                                            key={headerGroup.id}
+                                            className="divide-x divide-gray-300"
+                                        >
                                             {headerGroup.headers.map(
                                                 (header) => {
                                                     return (
                                                         <th
                                                             key={header.id}
-                                                            className="border border-slate-300 p-1 px-1.5 text-center font-bold bg-primary-700 text-white h-10 font-custom"
+                                                            className="p-1 px-1.5 text-center font-bold bg-gray-500 text-white h-10 font-custom"
                                                         >
                                                             {header.isPlaceholder
                                                                 ? null
@@ -252,7 +255,7 @@ export default function SubjectsPage() {
                                                     return (
                                                         <td
                                                             key={cell.id}
-                                                            className={`border border-primary-300 p-1 px-2 ${
+                                                            className={`border border-gray-400 p-1 px-2 ${
                                                                 index ===
                                                                 row.getVisibleCells()
                                                                     .length -

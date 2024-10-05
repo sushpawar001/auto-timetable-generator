@@ -6,7 +6,8 @@
 @tailwind utilities;
 
 .active {
-    @apply bg-primary;
+    @apply bg-primary-100;
+    @apply text-primary-700;
 }
 
 .modal-box {

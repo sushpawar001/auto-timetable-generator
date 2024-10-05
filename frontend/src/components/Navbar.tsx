@@ -1,74 +1,78 @@
-import {
-    FaBookReader,
-    FaChalkboardTeacher,
-    FaCloudUploadAlt,
-    FaHome,
-} from "react-icons/fa";
-import { FaGear, FaRightFromBracket } from "react-icons/fa6";
-import { IoPersonCircle } from "react-icons/io5";
-import { RiCalendarScheduleFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
+import {
+    LuCalendarDays,
+    LuHome,
+    LuLogOut,
+    LuSettings,
+    LuUpload,
+    LuUser,
+    LuUsers,
+    LuBookMarked,
+} from "react-icons/lu";
 
 const routes = [
     {
         name: "Home",
         path: "/",
-        icon: <FaHome />,
+        icon: <LuHome />,
     },
     {
         name: "Profile",
         path: "/profile",
-        icon: <IoPersonCircle />,
+        icon: <LuUser />,
     },
     {
         name: "TimeTable",
         path: "/timetable",
-        icon: <RiCalendarScheduleFill />,
+        icon: <LuCalendarDays />,
     },
     {
         name: "Upload Data",
         path: "/upload-data",
-        icon: <FaCloudUploadAlt />,
+        icon: <LuUpload />,
     },
     {
         name: "Professors",
         path: "/professors",
-        icon: <FaChalkboardTeacher />,
+        icon: <LuUsers />,
     },
     {
         name: "Subjects",
         path: "/subjects",
-        icon: <FaBookReader />,
+        icon: <LuBookMarked />,
     },
     {
         name: "Settings",
         path: "/settings",
-        icon: <FaGear />,
-    },
-    {
-        name: "Logout",
-        path: "/logout",
-        icon: <FaRightFromBracket />,
+        icon: <LuSettings />,
     },
 ];
 
 export default function Navbar() {
     // bg-zinc-900
     return (
-        <div className="h-full bg-neutral-950 flex flex-col text-white text-xl gap-4 px-5 w-2/12 p-10 font-custom">
-            <div className="mb-10 text-2xl p-1 pt-2.5 font-bold text-primary-100">
+        <div className="h-full bg-white flex flex-col text-neutral-950 px-5 w-2/12 p-10 font-custom shadow-md">
+            <div className="mb-10 text-2xl p-1 pt-2.5 font-bold">
                 <p>Timetable App</p>
             </div>
-            {routes.map((route) => (
-                <NavLink
-                    key={route.name}
-                    to={route.path}
-                    className="flex gap-3 hover:bg-primary rounded p-1 pl-2 duration-300 items-center "
-                >
-                    <span className="text-2xl">{route.icon}</span>
-                    <span className="text-lg">{route.name}</span>
-                </NavLink>
-            ))}
+            <nav className="space-y-2">
+                {routes.map((route) => (
+                    <NavLink
+                        key={route.name}
+                        to={route.path}
+                        className="flex space-x-3 hover:bg-primary-100 rounded p-1.5 pl-2 duration-300 items-center text-gray-800"
+                    >
+                        <span className="text-xl">{route.icon}</span>
+                        <span className="text-lg">{route.name}</span>
+                    </NavLink>
+                ))}
+            </nav>
+            <button className="bg-white border-primary border rounded p-1.5 text-primary w-full flex mt-auto space-x-3 items-center justify-center hover:bg-primary hover:text-white duration-500">
+                <span className="text-xl">
+                    <LuLogOut />
+                </span>
+                <span className="text-lg">Logout</span>
+            </button>
         </div>
     );
 }
