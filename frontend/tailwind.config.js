@@ -1,6 +1,7 @@
+import fluid, { extract, screens, fontSize } from "fluid-tailwind";
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+    content: { files: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], extract },
     theme: {
         extend: {
             colors: {
@@ -23,6 +24,8 @@ export default {
                 // rubik: ["Rubik", "sans-serif"],
                 custom: ["Nunito", "sans-serif"],
             },
+            screens,
+            fontSize,
         },
     },
     plugins: [
@@ -30,5 +33,6 @@ export default {
         require("tailwind-scrollbar")({
             nocompatible: true,
         }),
+        fluid,
     ],
 };

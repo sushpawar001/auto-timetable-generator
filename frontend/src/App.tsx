@@ -10,6 +10,7 @@ import SubjectsPage from "./pages/SubjectsPage";
 import SubjectEditPage from "./pages/SubjectEditPage";
 import { Toaster } from "react-hot-toast";
 import ProfessorsPage from "./pages/ProfessorsPage";
+import TestPage from "./pages/TestPage";
 
 function App() {
     // bg-[#100f14]
@@ -36,6 +37,10 @@ function App() {
                         <Route
                             path="/professors"
                             element={<ProfessorsPage />}
+                        />
+                        <Route
+                            path="/test"
+                            element={<TestPage />}
                         />
                         <Route path="*" element={<p>Page Not Found</p>} />
                     </Route>

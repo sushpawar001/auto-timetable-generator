@@ -63,7 +63,6 @@ export default function SubjectsPage() {
                         <button
                             className="border border-red-500 p-1 text-red-500 rounded-md hover:bg-red-600 hover:text-white duration-300"
                             onClick={() => {
-                                console.log(cell.row.original._id);
                                 deleteSubject(cell.row.original._id);
                             }}
                         >
@@ -103,7 +102,6 @@ export default function SubjectsPage() {
                 "http://localhost:8000/subjects/get",
                 { withCredentials: true }
             );
-            console.log(response.data);
             setSubjects(response.data.data);
         };
         getSubjects();
@@ -123,7 +121,6 @@ export default function SubjectsPage() {
                 toast.success("Subject deleted successfully!");
             }
         } catch (error) {
-            console.error("Error deleting data:", error);
             toast.error("Error deleting data: " + error);
         }
     };
@@ -139,7 +136,6 @@ export default function SubjectsPage() {
                 toast.success("All subjects deleted successfully!");
             }
         } catch (error) {
-            console.error("Error deleting data:", error);
             toast.error("Error deleting data: " + error);
         }
     };
@@ -151,14 +147,14 @@ export default function SubjectsPage() {
     return (
         <div className="h-full gap-3 flex flex-col">
             <div className="flex flex-grow gap-2.5">
-                <div className="bg-white rounded-md w-1/4 flex items-center p-1.5 shadow-md">
-                    <h1 className="text-2xl font-bold pl-4 text-primary-950 font-custom">
+                <div className="bg-white rounded-md w-1/5 flex items-center ~p-1/1.5 shadow-md">
+                    <h1 className="~text-base/xl font-bold pl-2 text-primary-950 font-custom">
                         Subjects
                     </h1>
                 </div>
-                <div className="bg-white rounded-md flex items-center justify-center p-1.5 shadow-md text-center">
+                <div className="bg-white rounded-md flex items-center justify-center ~p-1/1.5 shadow-md text-center w-[10%]">
                     <h3 className="text-sm">
-                        Total Subjects:{" "}
+                        Total:{" "}
                         <span className="font-bold">{subjects.length}</span>
                     </h3>
                 </div>
@@ -179,7 +175,7 @@ export default function SubjectsPage() {
                     placeholder="Select Subject Type"
                 />
                 <div className="bg-secondary rounded-md flex justify-center items-center p-1 shadow-md aspect-square border-2 border-red-500 text-red-500 hover:bg-red-600 hover:text-white hover:border-red-600 duration-300 cursor-pointer hover:scale-105 relative group">
-                    <LuRotateCcw className="w-6 h-6" />
+                    <LuRotateCcw className="~w-4/6 ~h-4/6" />
                     <ToolTip
                         content={
                             <span className="text-sm">Clear All Filters</span>
@@ -195,7 +191,7 @@ export default function SubjectsPage() {
                         modal?.showModal();
                     }}
                 >
-                    <LuTrash2 className="w-6 h-6 text-white" />
+                    <LuTrash2 className="~w-4/6 ~h-4/6 text-white" />
                     <ToolTip
                         content={
                             <span className="text-sm">
@@ -207,7 +203,7 @@ export default function SubjectsPage() {
                     />
                 </div>
             </div>
-            <div className="p-5 h-full bg-white rounded-md shadow-lg overflow-y-auto">
+            <div className="~p-2.5/4 h-full bg-white rounded-md shadow-lg overflow-y-auto">
                 <div className="h-full overflow-y-auto pr-2 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-gray-700 scrollbar-track-gray-300">
                     <div>
                         <table className="w-full">
@@ -223,7 +219,7 @@ export default function SubjectsPage() {
                                                     return (
                                                         <th
                                                             key={header.id}
-                                                            className="p-1 px-1.5 text-center font-bold bg-gray-500 text-white h-10 font-custom"
+                                                            className="p-1 ~px-1/2 text-center ~text-xs/base font-bold bg-gray-500 text-white h-10 font-custom"
                                                         >
                                                             {header.isPlaceholder
                                                                 ? null
@@ -255,7 +251,7 @@ export default function SubjectsPage() {
                                                     return (
                                                         <td
                                                             key={cell.id}
-                                                            className={`border border-gray-400 p-1 px-2 ${
+                                                            className={`border border-gray-400 p-1 px-2 ~text-xs/base ${
                                                                 index ===
                                                                 row.getVisibleCells()
                                                                     .length -

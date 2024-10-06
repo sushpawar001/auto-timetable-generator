@@ -60,12 +60,12 @@ export default function TimeTablePage() {
         <div className="h-full flex flex-col gap-3">
             <div className="w-full flex gap-3">
                 <div className="bg-secondary rounded-md w-2/3 flex items-center p-1.5 shadow-md">
-                    <h1 className="text-2xl font-bold pl-4 text-primary-950 font-custom">
+                    <h1 className="~text-base/xl font-bold pl-2 text-primary-950 font-custom">
                         {selectedDepartment} Time Table
                     </h1>
                 </div>
-                <div className="flex w-1/3 bg-secondary p-1.5 rounded-md shadow-md">
-                    <p className="text-sm my-auto w-3/5 text-center">
+                <div className="flex w-1/3 bg-secondary ~p-1/1.5 rounded-md shadow-md">
+                    <p className="~text-xs/sm my-auto w-3/5 text-center">
                         Select Department:
                     </p>
                     <select
@@ -80,7 +80,7 @@ export default function TimeTablePage() {
                     </select>
                 </div>
             </div>
-            <div className="bg-secondary p-4 rounded-md flex flex-col items-center h-full shadow-lg overflow-y-auto">
+            <div className="bg-secondary ~p-2.5/4 rounded-md flex flex-col items-center h-full shadow-lg overflow-y-auto">
                 <div className="w-full h-full">
                     <table className="w-full h-full">
                         <thead>
@@ -96,7 +96,7 @@ export default function TimeTablePage() {
                                     return (
                                         <th
                                             key={day}
-                                            className="p-1 text-center font-bold bg-gray-500 text-white h-10 font-custom"
+                                            className="p-1 ~text-xs/base text-center font-bold bg-gray-500 text-white h-10 font-custom"
                                         >
                                             {day}
                                         </th>
@@ -125,7 +125,7 @@ export default function TimeTablePage() {
                                                     "Empty Slot";
                                                 return (
                                                     <td
-                                                        className={`border border-gray-400 py-0.5 px-1 text-center w-1/6 hover:border-primary-700 hover:border-2 text-sm h-${numberOfLectures} ${
+                                                        className={`border border-gray-400 ~p-0.5/1 text-center w-1/6 hover:border-primary-700 hover:border-2 text-sm h-${numberOfLectures} ${
                                                             isFreeLecture
                                                                 ? "bg-gray-100 hover:border-gray-400"
                                                                 : "hover:bg-primary-100"
@@ -159,8 +159,8 @@ export default function TimeTablePage() {
 export function SubjectSlot({ data }: { data: subjectType }) {
     return (
         <>
-            <p className="text-sm font-medium">{data.subject}</p>
-            <p className="text-sm text-gray-600 mt-0.5">{data.professor}</p>
+            <p className="~text-xs/sm font-medium">{data.subject}</p>
+            <p className="~text-xs/sm text-gray-600 mt-0.5">{data.professor}</p>
             <p className="text-xs text-gray-600">({data.subtype})</p>
         </>
     );
