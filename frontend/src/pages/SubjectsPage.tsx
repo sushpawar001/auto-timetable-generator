@@ -203,78 +203,72 @@ export default function SubjectsPage() {
                     />
                 </div>
             </div>
-            <div className="~p-2.5/4 h-full bg-white rounded-md shadow-lg overflow-y-auto">
-                <div className="h-full overflow-y-auto pr-2 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-gray-700 scrollbar-track-gray-300">
-                    <div>
-                        <table className="w-full">
-                            <thead>
-                                {table.getHeaderGroups().map((headerGroup) => {
-                                    return (
-                                        <tr
-                                            key={headerGroup.id}
-                                            className="divide-x divide-gray-300"
-                                        >
-                                            {headerGroup.headers.map(
-                                                (header) => {
-                                                    return (
-                                                        <th
-                                                            key={header.id}
-                                                            className="p-1 ~px-1/2 text-center ~text-xs/base font-bold bg-gray-500 text-white h-10 font-custom"
-                                                        >
-                                                            {header.isPlaceholder
-                                                                ? null
-                                                                : flexRender(
-                                                                      header
-                                                                          .column
-                                                                          .columnDef
-                                                                          .header,
-                                                                      header.getContext()
-                                                                  )}
-                                                        </th>
-                                                    );
-                                                }
-                                            )}
-                                        </tr>
-                                    );
-                                })}
-                            </thead>
-                            <tbody>
-                                {table.getRowModel().rows.map((row) => {
-                                    return (
-                                        <tr
-                                            key={row.id}
-                                            className="hover:bg-primary-100"
-                                        >
-                                            {row
-                                                .getVisibleCells()
-                                                .map((cell, index) => {
-                                                    return (
-                                                        <td
-                                                            key={cell.id}
-                                                            className={`border border-gray-400 p-1 px-2 ~text-xs/base ${
-                                                                index ===
-                                                                row.getVisibleCells()
-                                                                    .length -
-                                                                    1
-                                                                    ? ""
-                                                                    : "hover:border-primary-600 hover:border-2"
-                                                            }`}
-                                                        >
-                                                            {flexRender(
-                                                                cell.column
-                                                                    .columnDef
-                                                                    .cell,
-                                                                cell.getContext()
-                                                            )}
-                                                        </td>
-                                                    );
-                                                })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
+            <div className="bg-secondary ~p-2.5/4 rounded-md flex flex-col items-center h-full shadow-lg overflow-y-auto">
+                <div className="w-full h-full">
+                    <table className="w-full">
+                        <thead>
+                            {table.getHeaderGroups().map((headerGroup) => {
+                                return (
+                                    <tr
+                                        key={headerGroup.id}
+                                        className="divide-x divide-gray-300"
+                                    >
+                                        {headerGroup.headers.map((header) => {
+                                            return (
+                                                <th
+                                                    key={header.id}
+                                                    className="p-1 ~px-1/2 text-center ~text-xs/base font-bold bg-gray-500 text-white h-10 font-custom"
+                                                >
+                                                    {header.isPlaceholder
+                                                        ? null
+                                                        : flexRender(
+                                                              header.column
+                                                                  .columnDef
+                                                                  .header,
+                                                              header.getContext()
+                                                          )}
+                                                </th>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </thead>
+                        <tbody>
+                            {table.getRowModel().rows.map((row) => {
+                                return (
+                                    <tr
+                                        key={row.id}
+                                        className="hover:bg-primary-100"
+                                    >
+                                        {row
+                                            .getVisibleCells()
+                                            .map((cell, index) => {
+                                                return (
+                                                    <td
+                                                        key={cell.id}
+                                                        className={`border border-gray-400 p-1 px-2 ~text-xs/base ${
+                                                            index ===
+                                                            row.getVisibleCells()
+                                                                .length -
+                                                                1
+                                                                ? ""
+                                                                : "hover:border-primary-600 hover:border-2"
+                                                        }`}
+                                                    >
+                                                        {flexRender(
+                                                            cell.column
+                                                                .columnDef.cell,
+                                                            cell.getContext()
+                                                        )}
+                                                    </td>
+                                                );
+                                            })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <DeleteConfirmationModal deleteFunction={deleteAllData} />

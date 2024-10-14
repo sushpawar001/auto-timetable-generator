@@ -11,6 +11,7 @@ import SubjectEditPage from "./pages/SubjectEditPage";
 import { Toaster } from "react-hot-toast";
 import ProfessorsPage from "./pages/ProfessorsPage";
 import TestPage from "./pages/TestPage";
+import DashboardPage2 from "./pages/DashboardPage2";
 
 function App() {
     // bg-[#100f14]
@@ -22,7 +23,7 @@ function App() {
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/login" element={<LoginPage />} />
                     </Route>
-                    <Route path="/" element={<DashboardPage />}>
+                    <Route path="/" element={<DashboardPage2 />}>
                         <Route index element={<HomePage />} />
                         <Route path="/timetable" element={<TimeTablePage />} />
                         <Route path="/subjects" element={<SubjectsPage />} />
