@@ -1,4 +1,6 @@
+import copy
 import datetime as dt
+from functools import cache
 import json
 
 
@@ -53,7 +55,7 @@ def auto_schedule(
     Generate a timetable schedule based on the availability of professors
     """
     all_years = get_all_years_with_optionals(professor_dict)
-    print(f"{all_years = }")
+    # print(f"{all_years = }")
     ttlist = create_timetable_struct(all_years)
     # print(f"{ttlist = }")
 
@@ -65,7 +67,7 @@ def auto_schedule(
             year, professor_dict, all_departments, ttlist, settings
         )
 
-    print(f"{ttlist = }")
+    # print(f"{ttlist = }")
     return ttlist
 
 
@@ -128,9 +130,9 @@ def calc_college_time(
     Calculates the total number of college minutes between a start time and an end time,
     given the duration of each lecture in minutes.
     """
-    print(f"{start_time = }")
-    print(f"{end_time = }")
-    print(f"{minutes_lecture = }")
+    # print(f"{start_time = }")
+    # print(f"{end_time = }")
+    # print(f"{minutes_lecture = }")
     college_time = end_time - start_time
     minutesofcollege = college_time.total_seconds() / 60.0
     return int(minutesofcollege // minutes_lecture)
@@ -658,11 +660,13 @@ def create_professors_timetable2(
             lecs = get_lecs_by_day_lec_num(day, lec_num, timetable)
             for lecture in lecs:
                 is_optional_lecture = len(lecture["professor"].split("/")) > 1
-                
+
                 if is_optional_lecture:
                     optional_professors = lecture["professor"].split("/")
                     for optional_professor in optional_professors:
-                        professor_timetable[optional_professor.strip()][day][lec_num] = lecture
+                        professor_timetable[optional_professor.strip()][day][
+                            lec_num
+                        ] = lecture
                     lecture.pop("professor")
 
                 elif lecture["professor"] == "Empty Slot":
@@ -670,5 +674,132 @@ def create_professors_timetable2(
                 else:
                     professor_timetable[lecture["professor"]][day][lec_num] = lecture
                     lecture.pop("professor")
-    
+
     return professor_timetable, max_lecs
+
+
+def tt_score_calc(ttlist: dict[str, dict[str, list]]) -> tuple[int, int, float]:
+    """
+    Calculates the timetable score (filled lectures/total lectures)
+    Args:
+        ttlist (str): TimeTable Dict
+
+    Returns:
+        empty_lecs (int): Empty lecture slots
+        total_lecs (int): Total lecture slots including empty
+        tt_score (flaot): Timetable Score
+    """
+    empty_lecs = 0
+    total_lecs = 0
+    for year in ttlist:
+        for day in ttlist[year]:
+            for lecture in ttlist[year][day]:
+                if "Empty Slot" in lecture["subject"]:
+                    empty_lecs += 1
+                total_lecs += 1
+    filled_slots = total_lecs - empty_lecs
+    tt_score = (filled_slots / total_lecs) * 100
+    return empty_lecs, total_lecs, tt_score
+
+
+def auto_schedule_with_prof_queue(
+    professor_dict: dict[str, dict[str, list]],
+    settings: dict[str, dict],
+    prof_queue: list[str],
+):
+    """
+    Generate a timetable schedule based on the availability of professors
+    """
+    all_years = get_all_years_with_optionals(professor_dict)
+    # print(f"{all_years = }")
+    ttlist = create_timetable_struct(all_years)
+    # print(f"{ttlist = }")
+
+    all_departments = get_all_departments(settings)
+    # print(f"{all_departments = }")
+
+    for year in all_years:
+        generate_year_wise_schedule_with_prof_queue(
+            year, professor_dict, all_departments, ttlist, settings, prof_queue
+        )
+
+    # print(f"{ttlist = }")
+    return ttlist
+
+
+def generate_year_wise_schedule_with_prof_queue(
+    year: str,
+    professor_dict: dict[str, dict[str, list]],
+    all_departments: list[str],
+    ttlist: dict[str, dict[str, list]],
+    settings: dict[str, dict],
+    professors_queue: list[str],
+) -> None:
+
+    department: str = get_department_by_year(year, all_departments)
+    start_time, end_time, minutes_lecture = get_department_time(department, settings)
+    no_of_lectures = calc_college_time(start_time, end_time, minutes_lecture)
+    practical_slots = get_practical_slots_by_department(department, settings)
+
+    for lec_num in range(no_of_lectures):
+        generate_daily_schedule(
+            year, lec_num, professors_queue, practical_slots, ttlist, professor_dict
+        )
+
+
+def auto_schedule_ga_score_func(formatted_tt_data, formatted_settings):
+    all_departments = get_all_departments(formatted_settings)
+    all_years = get_all_years_with_optionals(formatted_tt_data)
+
+    def queue_scheduler(
+        prof_queue: list[str],
+    ):
+        """
+        Generate a timetable schedule based on the availability of professors
+        """
+        prof_queue_local = prof_queue.copy()
+        ttlist = create_timetable_struct(all_years)
+        for year in all_years:
+            generate_year_wise_schedule_with_prof_queue(
+                year,
+                copy.deepcopy(formatted_tt_data),
+                all_departments,
+                ttlist,
+                formatted_settings,
+                prof_queue_local,
+            )
+        # print(f"\n{ttlist = }\n")
+
+        empty_lecs, total_lecs, tt_score = tt_score_calc(ttlist)
+        return tt_score
+
+    return queue_scheduler
+
+
+def auto_schedule_ga_score_func_cache(formatted_tt_data, formatted_settings):
+    all_departments = get_all_departments(formatted_settings)
+    all_years = get_all_years_with_optionals(formatted_tt_data)
+
+    @cache
+    def queue_scheduler(
+        prof_queue: tuple[str],
+    ):
+        """
+        Generate a timetable schedule based on the availability of professors
+        """
+        ttlist = create_timetable_struct(all_years)
+
+        for year in all_years:
+            generate_year_wise_schedule_with_prof_queue(
+                year,
+                copy.deepcopy(formatted_tt_data),
+                all_departments,
+                ttlist,
+                formatted_settings,
+                list(prof_queue),
+            )
+
+        empty_lecs, total_lecs, tt_score = tt_score_calc(ttlist)
+        return tt_score
+
+    return queue_scheduler
