@@ -38,7 +38,7 @@ export default function MobileNav({ children }: { children: ReactNode }) {
                         <NavLinksComponent />
                     </div>
                 </div>
-                <div className="w-full h-screen">{children}</div>
+                <div className="w-full h-full">{children}</div>
             </div>
             <div className="drawer-side">
                 <label
