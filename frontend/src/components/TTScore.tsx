@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, ResponsiveContainer, Tooltip, Label } from "recharts";
+import axios from "axios";
 
 type chartDataType = {
     name: string;
@@ -7,16 +8,21 @@ type chartDataType = {
     fill: string;
 };
 
-export default function TTScore() {
-    const [Score, setScore] = useState({
-        empty_lecs: 0,
-        total_lecs: 0,
-        tt_score: 0,
-    });
+type TTScoreProps = {
+    Score: {
+        empty_lecs: number;
+        total_lecs: number;
+        tt_score: number;
+    };
+};
+
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
+export default function TTScore({ Score }: TTScoreProps) {
+    const { empty_lecs, total_lecs, tt_score } = Score;
     const [chartData, setChartData] = useState<chartDataType[]>([]);
 
     useEffect(() => {
-        const { empty_lecs, total_lecs, tt_score } = Score;
         setChartData([
             { name: "Empty Slots", value: empty_lecs, fill: "#e0f2fe" },
             {
@@ -25,16 +31,7 @@ export default function TTScore() {
                 fill: "#0ea5e9",
             },
         ]);
-    }, [Score]);
-
-    useEffect(() => {
-        setScore({
-            empty_lecs: 10,
-            total_lecs: 100,
-            tt_score: 90,
-        });
-    }, []);
-
+    }, [empty_lecs, total_lecs, tt_score]);
 
     return (
         <div className="rounded-md shadow-md bg-white min-h-[40vh] md:min-h-0 h-full md:h-1/2 ~p-3/5 flex flex-col">
@@ -59,7 +56,7 @@ export default function TTScore() {
                             strokeWidth={5}
                         >
                             <Label
-                                value={`${Score.tt_score}%`}
+                                value={`${tt_score}%`}
                                 position="center"
                                 className="~text-base/2xl font-custom font-medium"
                                 fill="#000"

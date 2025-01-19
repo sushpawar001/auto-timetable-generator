@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { Timetable } from "../../types/timetable";
 
 type subjectType = {
     subject: string;
@@ -8,22 +9,8 @@ type subjectType = {
 };
 
 export default function TimeTablePage() {
-    const [timeTable, setTimeTable] = useState({
-        Mon: [],
-        Tue: [],
-        Wed: [],
-        Thurs: [],
-        Fri: [],
-        Sat: [],
-    });
-    const [filteredTimeTable, setFilteredTimeTable] = useState({
-        Mon: [],
-        Tue: [],
-        Wed: [],
-        Thurs: [],
-        Fri: [],
-        Sat: [],
-    });
+    const [timeTable, setTimeTable] = useState<Timetable>();
+    const [filteredTimeTable, setFilteredTimeTable] = useState<Timetable>();
     const [departments, setDepartments] = useState<string[]>([]);
     const [selectedDepartment, setSelectedDepartment] = useState("");
 
@@ -31,14 +18,14 @@ export default function TimeTablePage() {
 
     const getTimeTable = async () => {
         const response = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/timetable`,
+            `${import.meta.env.VITE_BACKEND_URL}/timetable/generate_timetable`,
             { withCredentials: true }
         );
-        console.log(response.data);
-        setDepartments(Object.keys(response.data.data).sort());
-        setTimeTable(response.data.data);
+        console.log(response.data.timetable);
+        setDepartments(Object.keys(response.data.timetable).sort());
+        setTimeTable(response.data.timetable);
         if (selectedDepartment === "") {
-            setSelectedDepartment(Object.keys(response.data.data)[0]);
+            setSelectedDepartment(Object.keys(response.data.timetable)[0]);
         }
     };
 
@@ -47,13 +34,15 @@ export default function TimeTablePage() {
     }, []);
 
     useEffect(() => {
-        if (selectedDepartment !== "") {
+        if (selectedDepartment !== "" && timeTable) {
             setFilteredTimeTable(timeTable[selectedDepartment]);
         }
     }, [selectedDepartment, timeTable]);
 
     useEffect(() => {
-        setNumberOfLectures(filteredTimeTable["Mon"].length);
+        if (filteredTimeTable) {
+            setNumberOfLectures(filteredTimeTable["Mon"].length);
+        }
     }, [filteredTimeTable]);
 
     return (

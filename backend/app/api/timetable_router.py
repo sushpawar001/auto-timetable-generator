@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter, HTTPException, Cookie
 from app.db.config import timetable_collection
 from app.utils.auth_helpers import decode_access_token
@@ -6,57 +7,66 @@ from app.utils.api_timetable_utils import (
     create_timetable_ga_optimized,
     create_timetable_sa,
     store_timetable,
-    create_timetable_ga,
     create_timetable_ai,
 )
 from app.utils.auto_schedule import tt_score_calc
+from app.models.timetable_model import (
+    GenerateTimetableModel,
+)
 
-timetable_router = APIRouter()
+timetable_router = APIRouter(prefix="/timetable", tags=["timetable"])
 
 
-@timetable_router.get("/timetable")
-async def get_timetable(access_token: str = Cookie()):
+@timetable_router.get("/generate_timetable")
+async def generate_timetable(access_token: str = Cookie()) -> GenerateTimetableModel:
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    user_id = decode_access_token(access_token)
+    timetable = timetable_collection.find_one({"user_id": user_id}, {"_id": 0})
+
+    if not timetable:
+        timetable = create_timetable(user_id)
+        store_timetable(user_id, timetable)
+
+    return GenerateTimetableModel(**timetable)
+
+
+@timetable_router.get("/generate_ai_timetable")
+async def generate_ai_timetable(access_token: str = Cookie()) -> GenerateTimetableModel:
     if not access_token:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
     user_id = decode_access_token(access_token)
     print(f"{user_id = }")
     timetable = timetable_collection.find_one({"user_id": user_id}, {"_id": 0})
+    timetable = None
+    if not timetable:
+        timetable = create_timetable_ai(user_id)
+        store_timetable(user_id, timetable)
+    else:
+        timetable = timetable["timetable"]
+
+
+    return GenerateTimetableModel(timetable=timetable)
+
+
+@timetable_router.get("/get_timetable_score")
+async def get_timetable_score(access_token: str = Cookie()) -> dict:
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    user_id = decode_access_token(access_token)
+
+    timetable = timetable_collection.find_one({"user_id": user_id}, {"_id": 0})
 
     if not timetable:
-        timetable = create_timetable(user_id)
-        store_timetable(user_id, timetable)
-        print("Timetable created")
+        raise HTTPException(status_code=404, detail="Timetable not found")
 
-    return {"status": "success", "data": timetable["timetable"]}
+    empty_lecs, total_lecs, tt_score = tt_score_calc(timetable["timetable"])
 
-
-@timetable_router.get("/test_tt")
-def test_tt(user_id: str):
-    import json, time
-
-    # # manual approch 91.66
-    # "668f5e36fea09a575df5e494"
-    
-    start = time.perf_counter()
-    tt = create_timetable_ga_optimized(user_id)
-    end = time.perf_counter()
-    time_taken = end - start
-    print(f"[ga optimized] {time_taken = }")
-    print(f"score {tt_score_calc(tt)}")
-    
-    start = time.perf_counter()
-    tt = create_timetable_sa(user_id)
-    end = time.perf_counter()
-    time_taken = end - start
-    print(f"[sa] {time_taken = }")
-    print(f"score {tt_score_calc(tt)}")
-    
-    start = time.perf_counter()
-    tt = create_timetable_ai(user_id)
-    end = time.perf_counter()
-    time_taken = end - start
-    print(f"[ai] {time_taken = }")
-    print(f"score {tt_score_calc(tt)}")
-
-    return {"status": "success"}
+    return {
+        "empty_lecs": empty_lecs,
+        "total_lecs": total_lecs,
+        "tt_score": round(tt_score, 2),
+    }

@@ -88,7 +88,7 @@ async def delete_subject(subject_id: str, access_token: str = Cookie()):
     )
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Subject not found")
-    
+
     timetable = create_timetable(user_id)
     store_timetable(user_id, timetable)
 
@@ -154,7 +154,7 @@ async def get_csv_data(subjects: List[SubjectModelInput], access_token: str = Co
 
     subject_collection.delete_many({"user_id": user_id})
     department_settings_collection.delete_many({"user_id": user_id})
-    
+
     subject_result = subject_collection.insert_many(to_upload)
     department_settings_result = department_settings_collection.insert_many(
         department_settings

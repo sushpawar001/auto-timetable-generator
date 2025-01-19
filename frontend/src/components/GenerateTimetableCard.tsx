@@ -1,9 +1,33 @@
+import axios from "axios";
 import { useState } from "react";
-import { LuCpu, LuClock, LuAlertTriangle } from "react-icons/lu";
+import { toast } from "react-hot-toast";
+import { LuClock, LuCpu } from "react-icons/lu";
+
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default function GenerateTimetableCard() {
     const [algorithm, setAlgorithm] = useState("regular");
     const [isGenerating, setIsGenerating] = useState(false);
+
+    const getTimetable = async () => {
+        console.log(algorithm);
+        setIsGenerating(true);
+        if (algorithm === "regular") {
+            const response = await axios.get(
+                `${apiUrl}/timetable/generate_timetable`,
+                { withCredentials: true }
+            );
+            console.log(response);
+        } else {
+            const response = await axios.get(
+                `${apiUrl}/timetable/generate_ai_timetable`,
+                { withCredentials: true }
+            );
+            console.log(response);
+        }
+        toast.success("Timetable generated successfully");
+        setIsGenerating(false);
+    };
 
     return (
         <div className="flex flex-col items-center justify-center h-full bg-white rounded-md shadow-md min-h-[40vh] md:min-h-0 md:h-1/2">
@@ -82,8 +106,22 @@ export default function GenerateTimetableCard() {
                 </div>
             </div>
             <div className="~mt-2/4 w-[90%]">
-                <button className="w-full p-2 text-white rounded-md bg-primary">
-                    Generate Timetables
+                <button
+                    className={`w-full p-2 rounded-md flex items-center justify-center gap-2 ${
+                        isGenerating
+                            ? "bg-gray-200 text-gray-400 border border-gray-300 cursor-not-allowed"
+                            : "bg-primary text-white"
+                    }`}
+                    onClick={getTimetable}
+                >
+                    {isGenerating ? (
+                        <div className="flex items-center justify-center gap-3">
+                            <p>AI is doing its magic</p>
+                            <span className="loading loading-dots loading-md"></span>
+                        </div>
+                    ) : (
+                        "Generate Timetables"
+                    )}
                 </button>
             </div>
         </div>

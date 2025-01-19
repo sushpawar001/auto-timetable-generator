@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
 import TimeTablePage from "./pages/TimeTablePage";
 import UploadDataPage from "./pages/UploadDataPage";
