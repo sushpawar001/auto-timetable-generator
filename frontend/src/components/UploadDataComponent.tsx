@@ -186,8 +186,8 @@ export default function UploadDataComponent() {
                 </button>
             </div>
             {jsonData ? (
-                <div className="h-full pr-2 mt-4 overflow-y-auto">
-                    <div>
+                <div className="h-full px-2 mt-4 overflow-y-auto">
+                    <div className="h-20">
                         <table className="w-full">
                             <thead>
                                 {table.getHeaderGroups().map((headerGroup) => (

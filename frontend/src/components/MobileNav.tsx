@@ -38,7 +38,7 @@ export default function MobileNav({ children }: { children: ReactNode }) {
                         <NavLinksComponent />
                     </div>
                 </div>
-                <div className="w-full h-full">{children}</div>
+                <div className="w-full h-screen">{children}</div>
             </div>
             <div className="drawer-side">
                 <label
@@ -52,11 +52,11 @@ export default function MobileNav({ children }: { children: ReactNode }) {
                     </div>
                     <NavLinksComponent />
                     <button className="bg-white border-primary border rounded p-1.5 text-primary w-full flex mt-auto space-x-3 items-center justify-center hover:bg-primary hover:text-white duration-500">
-                <span className="~text-base/xl">
-                    <LuLogOut />
-                </span>
-                <span className="~text-sm/lg">Logout</span>
-            </button>
+                        <span className="~text-base/xl">
+                            <LuLogOut />
+                        </span>
+                        <span className="~text-sm/lg">Logout</span>
+                    </button>
                 </div>
             </div>
         </div>
