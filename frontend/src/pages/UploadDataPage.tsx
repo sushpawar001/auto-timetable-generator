@@ -12,16 +12,16 @@ export default function UploadDataPage() {
         total_lecs: 0,
         tt_score: 0,
     });
+    const getScore = async () => {
+        const response = await axios.get(
+            `${apiUrl}/timetable/get_timetable_score`,
+            { withCredentials: true }
+        );
+        console.log(response.data);
+        setScore(response.data);
+    };
 
     useEffect(() => {
-        const getScore = async () => {
-            const response = await axios.get(
-                `${apiUrl}/timetable/get_timetable_score`,
-                { withCredentials: true }
-            );
-            console.log(response.data);
-            setScore(response.data);
-        };
         getScore();
     }, []);
 
@@ -31,7 +31,7 @@ export default function UploadDataPage() {
                 <UploadDataComponent />
                 <div className="flex flex-col h-full gap-3">
                     <TTScore Score={Score} />
-                    <GenerateTimetableCard />
+                    <GenerateTimetableCard onTimetableGenerated={getScore} />
                 </div>
             </div>
         </div>

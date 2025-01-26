@@ -23,13 +23,11 @@ async def generate_timetable(access_token: str = Cookie()) -> GenerateTimetableM
         raise HTTPException(status_code=401, detail="Not authenticated")
 
     user_id = decode_access_token(access_token)
-    timetable = timetable_collection.find_one({"user_id": user_id}, {"_id": 0})
 
-    if not timetable:
-        timetable = create_timetable(user_id)
-        store_timetable(user_id, timetable)
+    timetable = create_timetable(user_id)
+    store_timetable(user_id, timetable)
 
-    return GenerateTimetableModel(**timetable)
+    return GenerateTimetableModel(timetable=timetable)
 
 
 @timetable_router.get("/generate_ai_timetable")
@@ -38,15 +36,9 @@ async def generate_ai_timetable(access_token: str = Cookie()) -> GenerateTimetab
         raise HTTPException(status_code=401, detail="Not authenticated")
 
     user_id = decode_access_token(access_token)
-    print(f"{user_id = }")
-    timetable = timetable_collection.find_one({"user_id": user_id}, {"_id": 0})
-    timetable = None
-    if not timetable:
-        timetable = create_timetable_ai(user_id)
-        store_timetable(user_id, timetable)
-    else:
-        timetable = timetable["timetable"]
 
+    timetable = create_timetable_ai(user_id)
+    store_timetable(user_id, timetable)
 
     return GenerateTimetableModel(timetable=timetable)
 

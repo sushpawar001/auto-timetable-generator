@@ -5,7 +5,13 @@ import { LuClock, LuCpu } from "react-icons/lu";
 
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
-export default function GenerateTimetableCard() {
+type GenerateTimetableCardProps = {
+    onTimetableGenerated: () => void;
+};
+
+export default function GenerateTimetableCard({
+    onTimetableGenerated,
+}: GenerateTimetableCardProps) {
     const [algorithm, setAlgorithm] = useState("regular");
     const [isGenerating, setIsGenerating] = useState(false);
 
@@ -27,6 +33,7 @@ export default function GenerateTimetableCard() {
         }
         toast.success("Timetable generated successfully");
         setIsGenerating(false);
+        onTimetableGenerated();
     };
 
     return (

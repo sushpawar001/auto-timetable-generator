@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PieChart, Pie, ResponsiveContainer, Tooltip, Label } from "recharts";
-import axios from "axios";
 
 type chartDataType = {
     name: string;
@@ -15,8 +14,6 @@ type TTScoreProps = {
         tt_score: number;
     };
 };
-
-const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default function TTScore({ Score }: TTScoreProps) {
     const { empty_lecs, total_lecs, tt_score } = Score;
