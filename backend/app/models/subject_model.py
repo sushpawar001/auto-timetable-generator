@@ -24,3 +24,7 @@ class DepartmentSettings(BaseModel):
     end_time: str = "10:00"
     practical_slots: list[str] = []
     minutes_lecture: int = 40
+
+class DepartmentSettingsInput(DepartmentSettings):
+    department_id: str
+

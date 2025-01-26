@@ -8,6 +8,7 @@ import {
     LuUser,
     LuUsers,
     LuBookMarked,
+    LuBuilding2,
 } from "react-icons/lu";
 
 const routes = [
@@ -42,9 +43,9 @@ const routes = [
         icon: <LuBookMarked />,
     },
     {
-        name: "Settings",
-        path: "/settings",
-        icon: <LuSettings />,
+        name: "Departments",
+        path: "/departments",
+        icon: <LuBuilding2 />,
     },
 ];
 

@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import { LuLogOut } from "react-icons/lu";
 import NavLinksComponent from "./NavLinksComponent";
 

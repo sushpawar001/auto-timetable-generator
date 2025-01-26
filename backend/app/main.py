@@ -6,6 +6,7 @@ from app.api.auth import auth_router
 from app.api.professor_router import professor_router
 from starlette.middleware.base import BaseHTTPMiddleware
 from app.api.subjects_router import subjects_router
+from app.api.department_router import department_router
 from fastapi.middleware.gzip import GZipMiddleware
 
 app = FastAPI()
@@ -46,7 +47,7 @@ app.include_router(auth_router, tags=["auth"])
 app.include_router(timetable_router, tags=["timetable"])
 app.include_router(subjects_router, tags=["subjects"])
 app.include_router(professor_router, tags=["professor"])
-
+app.include_router(department_router, tags=["department"])
 
 if __name__ == "__main__":
     import uvicorn

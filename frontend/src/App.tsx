@@ -11,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import ProfessorsPage from "./pages/ProfessorsPage";
 import TestPage from "./pages/TestPage";
 import DashboardPage2 from "./pages/DashboardPage2";
+import DepartmentsPage from "./pages/DepartmentsPage";
 
 function App() {
     // bg-[#100f14]
@@ -39,10 +40,20 @@ function App() {
                             element={<ProfessorsPage />}
                         />
                         <Route
-                            path="/test"
-                            element={<TestPage />}
+                            path="/departments"
+                            element={<DepartmentsPage />}
                         />
-                        <Route path="*" element={<p>Page Not Found</p>} />
+                        <Route path="/test" element={<TestPage />} />
+                        <Route
+                            path="*"
+                            element={
+                                <div className="flex items-center justify-center h-full">
+                                    <p className="text-center text-2xl font-bold">
+                                        Page Not Found
+                                    </p>
+                                </div>
+                            }
+                        />
                     </Route>
                 </Routes>
             </Router>
