@@ -42,7 +42,7 @@ export default function DepartmentsPage() {
             }
         };
         getDepartmentSettings();
-    }, [activeTab]);
+    }, [activeTab, departments]);
 
     if (loading) {
         return (
@@ -55,12 +55,12 @@ export default function DepartmentsPage() {
     return (
         <div className="flex flex-col h-full w-full">
             <div className="bg-gray-100 p-1 rounded-lg w-full mb-2.5 shadow-md">
-                <div className="grid grid-cols-4 gap-2">
+                <div className="flex gap-2">
                     {departments.map((dept) => (
                         <button
                             key={dept.department}
                             onClick={() => setActiveTab(dept.department)}
-                            className={`py-2.5 text-sm font-medium rounded-md transition-colors flex items-center justify-center
+                            className={`py-2.5 text-sm font-medium rounded-md transition-colors flex items-center justify-center w-full
                     ${
                         activeTab === dept.department
                             ? "bg-secondary shadow-sm"

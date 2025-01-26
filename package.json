@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm:backend\" \"npm:frontend\"",
-    "backend": "cd backend && fastapi dev app/main.py",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && uvicorn app.main:app --reload",
+    "backend-dev": "cd backend && fastapi dev app/main.py",
     "frontend": "cd frontend && npm run dev"
   },
   "author": "",

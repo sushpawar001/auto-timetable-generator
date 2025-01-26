@@ -24,23 +24,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# class TokenCheckMiddleware(BaseHTTPMiddleware):
-#     async def dispatch(self, request: Request, call_next):
-#         public_paths = ["/login", "/register", "/docs", "/openapi.json"]
-
-#         if (
-#             request.url.path not in public_paths
-#             and "access_token" not in request.cookies
-#         ):
-#             return JSONResponse(
-#                 status_code=status.HTTP_401_UNAUTHORIZED,
-#                 content={"status": "error", "detail": "Not authenticated"},
-#             )
-#         response = await call_next(request)
-#         return response
-
-# app.add_middleware(TokenCheckMiddleware)
-
 app.add_middleware(GZipMiddleware)
 
 app.include_router(auth_router, tags=["auth"])
@@ -51,4 +34,5 @@ app.include_router(department_router, tags=["department"])
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
