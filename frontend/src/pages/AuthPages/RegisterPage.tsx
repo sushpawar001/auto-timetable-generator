@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaLock, FaEnvelope } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 export default function RegisterPage() {
     const [form, setForm] = useState({
@@ -17,10 +18,18 @@ export default function RegisterPage() {
 
     const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(form);
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/register`, form);
-        console.log(response);
-        navigate("/login");
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/register`, form);
+            console.log(response)
+            if (response.status === 200) {
+                toast.success("Registration successful!");
+                navigate("/login");
+            } else {
+                toast.error(response.data.detail);
+            }
+        } catch (error) {
+            toast.error(error.response.data.detail);
+        }
     };
 
     return (

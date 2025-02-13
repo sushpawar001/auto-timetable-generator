@@ -26,9 +26,18 @@ def get_all_professors(access_token: str = Cookie(None)):
 def get_professors_timetable(access_token: str = Cookie(None)):
     user_id = decode_access_token(access_token)
     subjects = subject_collection.find({"user_id": user_id})
+
+    if not list(subjects):
+        raise HTTPException(status_code=404, detail="No subjects found")
+
+
     department_settings = department_settings_collection.find(
         {"user_id": user_id}, {"_id": 0, "user_id": 0, "practical_slots": 0}
     )
+
+    if not list(department_settings):
+        raise HTTPException(status_code=404, detail="No department settings found")
+
     professors = set(
         split_strip_strings([subject["professor"] for subject in subjects])
     )

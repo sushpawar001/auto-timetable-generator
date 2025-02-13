@@ -22,13 +22,21 @@ from app.utils.simulated_annealing import simulated_annealing
 
 
 def create_timetable(user_id: str):
+    subjects = subject_collection.find({"user_id": user_id})
+    subjects = list(subjects)
+    if not subjects:
+        raise ValueError(f"No subjects found for given user")
+
     department_settings = department_settings_collection.find(
         {"user_id": user_id}, {"_id": 0, "user_id": 0}
     )
-    formatted_settings = convert_data_format_settings(list(department_settings))
+    department_settings = list(department_settings)
+    
+    if not department_settings:
+        raise ValueError(f"No department settings found for given user")
 
-    subjects = subject_collection.find({"user_id": user_id})
-    formatted_tt_data = convert_data_format_tt(list(subjects))
+    formatted_settings = convert_data_format_settings(department_settings)
+    formatted_tt_data = convert_data_format_tt(subjects)
 
     timetable = auto_schedule(formatted_tt_data, formatted_settings)
 
@@ -45,11 +53,15 @@ def create_timetable_ga(user_id: str):
     department_settings = department_settings_collection.find(
         {"user_id": user_id}, {"_id": 0, "user_id": 0}
     )
-    formatted_settings = convert_data_format_settings(list(department_settings))
+    if not department_settings:
+        raise ValueError("No department settings found for user_id {user_id}")
 
     subjects = subject_collection.find({"user_id": user_id})
+    if not subjects:
+        raise ValueError("No subjects found for user_id {user_id}")
     subjects_list = list(subjects)
 
+    formatted_settings = convert_data_format_settings(list(department_settings))
     professors = set(
         split_strip_strings([subject["professor"] for subject in subjects_list])
     )
@@ -145,14 +157,23 @@ def create_timetable_ai(user_id: str, execution_time_seconds: int = 30):
     INITIAL_TEMPERATURE = 2000.0
     COOLING_RATE = 0.995
     NUM_ITERATIONS = 1500
+    
+    subjects = subject_collection.find({"user_id": user_id})
+    subjects_list = list(subjects)
+
+    if not subjects_list:
+        raise ValueError(f"No subjects found for given user")
 
     department_settings = department_settings_collection.find(
         {"user_id": user_id}, {"_id": 0, "user_id": 0}
     )
+    department_settings = list(department_settings)
+
+    if not department_settings:
+        raise ValueError(f"No department settings found for given user")
+
     formatted_settings = convert_data_format_settings(list(department_settings))
 
-    subjects = subject_collection.find({"user_id": user_id})
-    subjects_list = list(subjects)
 
     professors = set(
         split_strip_strings([subject["professor"] for subject in subjects_list])
@@ -186,8 +207,12 @@ def create_timetable_ai(user_id: str, execution_time_seconds: int = 30):
 
     best_score_ga = score_func(best_q_ga)
 
-    scores = [(best_score_sa, best_q_sa), (best_score_ga, best_q_ga), (best_score_sa2, best_q_sa2)]
-    
+    scores = [
+        (best_score_sa, best_q_sa),
+        (best_score_ga, best_q_ga),
+        (best_score_sa2, best_q_sa2),
+    ]
+
     best_score, best_q = max(scores, key=lambda x: x[0])
 
     timetable = auto_schedule_with_prof_queue(

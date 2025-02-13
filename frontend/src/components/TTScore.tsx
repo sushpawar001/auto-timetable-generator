@@ -40,30 +40,36 @@ export default function TTScore({ Score }: TTScoreProps) {
                     Score based on your timetable in percentage
                 </p>
             </div>
-            <div className="h-full">
-                <ResponsiveContainer width="100%">
-                    <PieChart>
-                        <Pie
-                            data={chartData}
-                            dataKey="value"
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={60}
-                            outerRadius={85}
-                            strokeWidth={5}
-                        >
-                            <Label
-                                value={`${tt_score}%`}
-                                position="center"
-                                className="~text-base/2xl font-custom font-medium"
-                                fill="#000"
-                            />
-                        </Pie>
+            {total_lecs > 0 ? (
+                <div className="h-full">
+                    <ResponsiveContainer width="100%">
+                        <PieChart>
+                            <Pie
+                                data={chartData}
+                                dataKey="value"
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={60}
+                                outerRadius={85}
+                                strokeWidth={5}
+                            >
+                                <Label
+                                    value={`${tt_score}%`}
+                                    position="center"
+                                    className="~text-base/2xl font-custom font-medium"
+                                    fill="#000"
+                                />
+                            </Pie>
 
-                        <Tooltip />
-                    </PieChart>
-                </ResponsiveContainer>
-            </div>
+                            <Tooltip />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+            ) : (
+                <div className="h-full flex items-center justify-center">
+                    Score not available
+                </div>
+            )}
         </div>
     );
 }

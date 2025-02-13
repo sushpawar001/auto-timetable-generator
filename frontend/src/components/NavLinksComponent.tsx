@@ -12,14 +12,14 @@ import {
 } from "react-icons/lu";
 
 const routes = [
-    {
-        name: "Home",
-        path: "/",
-        icon: <LuHome />,
-    },
+    // {
+    //     name: "Home",
+    //     path: "/",
+    //     icon: <LuHome />,
+    // },
     {
         name: "Profile",
-        path: "/profile",
+        path: "/",
         icon: <LuUser />,
     },
     {

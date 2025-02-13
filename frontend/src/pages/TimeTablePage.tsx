@@ -18,7 +18,7 @@ export default function TimeTablePage() {
 
     const getTimeTable = async () => {
         const response = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/timetable/generate_timetable`,
+            `${import.meta.env.VITE_BACKEND_URL}/timetable/get_timetable`,
             { withCredentials: true }
         );
         console.log(response.data.timetable);
@@ -71,74 +71,10 @@ export default function TimeTablePage() {
             </div>
             <div className="bg-secondary ~p-2.5/4 rounded-md flex flex-col items-center h-full shadow-lg overflow-y-auto">
                 <div className="w-full h-full">
-                    <table className="w-full h-full">
-                        <thead>
-                            <tr className="divide-x divide-gray-300">
-                                {[
-                                    "Mon",
-                                    "Tue",
-                                    "Wed",
-                                    "Thurs",
-                                    "Fri",
-                                    "Sat",
-                                ].map((day) => {
-                                    return (
-                                        <th
-                                            key={day}
-                                            className="p-1 ~text-xs/base text-center font-bold bg-gray-500 text-white h-10 font-custom"
-                                        >
-                                            {day}
-                                        </th>
-                                    );
-                                })}
-                            </tr>
-                        </thead>
-                        <tbody className="w-full">
-                            {Array.from(
-                                { length: numberOfLectures },
-                                (_, i) => {
-                                    return (
-                                        <tr key={i}>
-                                            {[
-                                                "Mon",
-                                                "Tue",
-                                                "Wed",
-                                                "Thurs",
-                                                "Fri",
-                                                "Sat",
-                                            ].map((day) => {
-                                                const subObj =
-                                                    filteredTimeTable[day][i];
-                                                const isFreeLecture =
-                                                    subObj["subject"] ===
-                                                    "Empty Slot";
-                                                return (
-                                                    <td
-                                                        className={`border border-gray-400 ~p-0.5/1 text-center w-1/6 hover:border-primary-700 hover:border-2 text-sm h-${numberOfLectures} ${
-                                                            isFreeLecture
-                                                                ? "bg-gray-100 hover:border-gray-400"
-                                                                : "hover:bg-primary-100"
-                                                        }`}
-                                                        key={day + "-" + i}
-                                                    >
-                                                        {isFreeLecture ? (
-                                                            <p className="text-sm font-medium text-gray-400">
-                                                                Free Lecture
-                                                            </p>
-                                                        ) : (
-                                                            <SubjectSlot
-                                                                data={subObj}
-                                                            />
-                                                        )}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                }
-                            )}
-                        </tbody>
-                    </table>
+                    {filteredTimeTable ? <TimeTableComponent
+                        numberOfLectures={numberOfLectures}
+                        filteredTimeTable={filteredTimeTable!}
+                    />: <div className="w-full h-full flex items-center justify-center text-2xl">You have not created a timetable</div>}
                 </div>
             </div>
         </div>
@@ -152,5 +88,65 @@ export function SubjectSlot({ data }: { data: subjectType }) {
             <p className="~text-xs/sm text-gray-600 mt-0.5">{data.professor}</p>
             <p className="text-xs text-gray-600">({data.subtype})</p>
         </>
+    );
+}
+
+export function TimeTableComponent({
+    numberOfLectures,
+    filteredTimeTable,
+}: {
+    numberOfLectures: number;
+    filteredTimeTable: Timetable;
+}) {
+    return (
+        <table className="w-full h-full">
+            <thead>
+                <tr className="divide-x divide-gray-300">
+                    {["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"].map((day) => {
+                        return (
+                            <th
+                                key={day}
+                                className="p-1 ~text-xs/base text-center font-bold bg-gray-500 text-white h-10 font-custom"
+                            >
+                                {day}
+                            </th>
+                        );
+                    })}
+                </tr>
+            </thead>
+            <tbody className="w-full">
+                {Array.from({ length: numberOfLectures }, (_, i) => {
+                    return (
+                        <tr key={i}>
+                            {["Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"].map(
+                                (day) => {
+                                    const subObj = filteredTimeTable[day][i];
+                                    const isFreeLecture =
+                                        subObj["subject"] === "Empty Slot";
+                                    return (
+                                        <td
+                                            className={`border border-gray-400 ~p-0.5/1 text-center w-1/6 hover:border-primary-700 hover:border-2 text-sm h-${numberOfLectures} ${
+                                                isFreeLecture
+                                                    ? "bg-gray-100 hover:border-gray-400"
+                                                    : "hover:bg-primary-100"
+                                            }`}
+                                            key={day + "-" + i}
+                                        >
+                                            {isFreeLecture ? (
+                                                <p className="text-sm font-medium text-gray-400">
+                                                    Free Lecture
+                                                </p>
+                                            ) : (
+                                                <SubjectSlot data={subObj} />
+                                            )}
+                                        </td>
+                                    );
+                                }
+                            )}
+                        </tr>
+                    );
+                })}
+            </tbody>
+        </table>
     );
 }

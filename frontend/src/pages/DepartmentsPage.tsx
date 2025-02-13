@@ -20,11 +20,15 @@ export default function DepartmentsPage() {
                 const response = await axios.get(`${apiUrl}/departments/get`, {
                     withCredentials: true,
                 });
-                setDepartments(response.data.data);
-                setActiveTab(response.data.data[0].department);
+                if (response.data && response.data.data) {
+                    setDepartments(response.data.data);
+                    if (response.data.data.length > 0) {
+                        setActiveTab(response.data.data[0].department);
+                    }
+                }
                 setLoading(false);
             } catch (error) {
-                console.log(error);
+                console.error(error);
             } finally {
                 setLoading(false);
             }
@@ -54,7 +58,7 @@ export default function DepartmentsPage() {
 
     return (
         <div className="flex flex-col h-full w-full">
-            <div className="bg-gray-100 p-1 rounded-lg w-full mb-2.5 shadow-md">
+            {departments.length > 0 && <div className="bg-gray-100 p-1 rounded-lg w-full mb-2.5 shadow-md">
                 <div className="flex gap-2">
                     {departments.map((dept) => (
                         <button
@@ -74,12 +78,16 @@ export default function DepartmentsPage() {
                         </button>
                     ))}
                 </div>
-            </div>
+            </div>}
             <div className="bg-secondary ~p-2.5/4 rounded-md flex flex-col items-center h-full shadow-lg overflow-y-auto">
-                {departmentSettings && (
+                {departmentSettings ? (
                     <DepartmentSettings
                         departmentSettings={departmentSettings}
                     />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                            <p className="text-2xl">No Departments found</p>
+                        </div>
                 )}
             </div>
         </div>

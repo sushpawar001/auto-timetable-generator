@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 
 type subjectType = {
@@ -25,17 +26,30 @@ export default function ProfessorsPage() {
     const [slots, setSlots] = useState<number[]>([]);
 
     const getProfessorsTimeTable = async () => {
-        const response = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/professors/timetable`,
-            { withCredentials: true }
-        );
-        // console.log("getProfessorsTimeTable", response.data);
-        setTimeTable(response.data.timetable_data);
-        setNumberOfLectures(response.data.number_of_lectures);
-        const professors = Object.keys(response.data.timetable_data).sort();
-
-        setProfessors(professors);
-        setSelectedProfessor(professors[0]);
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_BACKEND_URL}/professors/timetable`,
+                { withCredentials: true }
+            );
+            if (!response.data) {
+                throw new Error("No data received from server");
+            }
+            const { timetable_data, number_of_lectures } = response.data;
+            if (!timetable_data || !number_of_lectures) {
+                throw new Error("Missing data in response");
+            }
+            setTimeTable(timetable_data);
+            setNumberOfLectures(number_of_lectures);
+            const professors = Object.keys(timetable_data).sort();
+            if (professors.length === 0) {
+                throw new Error("No professors found in response");
+            }
+            setProfessors(professors);
+            setSelectedProfessor(professors[0]);
+        } catch (error) {
+            console.error(error);
+            // toast.error(error.response.data.detail);
+        }
     };
 
     useEffect(() => {
@@ -140,7 +154,7 @@ export default function ProfessorsPage() {
                             </tbody>
                         </table>
                     ) : (
-                        <p>No time table</p>
+                        <div className="w-full h-full flex items-center justify-center text-2xl">You have not created a timetable</div>
                     )}
                 </div>
             </div>

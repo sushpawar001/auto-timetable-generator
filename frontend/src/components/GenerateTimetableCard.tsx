@@ -18,22 +18,20 @@ export default function GenerateTimetableCard({
     const getTimetable = async () => {
         console.log(algorithm);
         setIsGenerating(true);
-        if (algorithm === "regular") {
+        try {
             const response = await axios.get(
-                `${apiUrl}/timetable/generate_timetable`,
+                `${apiUrl}/timetable/${algorithm === "regular" ? "generate_timetable" : "generate_ai_timetable"}`,
                 { withCredentials: true }
             );
             console.log(response);
-        } else {
-            const response = await axios.get(
-                `${apiUrl}/timetable/generate_ai_timetable`,
-                { withCredentials: true }
-            );
-            console.log(response);
+            toast.success("Timetable generated successfully");
+        } catch (error) {
+            console.error(error);
+            toast.error(error.response.data.detail);
+        } finally {
+            setIsGenerating(false);
+            onTimetableGenerated();
         }
-        toast.success("Timetable generated successfully");
-        setIsGenerating(false);
-        onTimetableGenerated();
     };
 
     return (
