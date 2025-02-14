@@ -80,7 +80,7 @@ pylint-report.txt
 
 # Environments
 .env
-.env.*
+# .env.*
 
 # Docker
 *.log
