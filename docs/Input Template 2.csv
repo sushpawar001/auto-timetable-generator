@@ -1,0 +1,110 @@
+subject,professor,department,college_year,subject_type,workload
+Introduction & Element of Cost (Cost A/C),Manisha Chauhan,BAF,FY,Theory,4
+Business Communication –I (BC-I),Priya Jadhav,BAF,FY,Theory,4
+Elements of Fianancial Accounting-I (FA-I),Rakesh Prajapati,BAF,FY,Theory,4
+Business Envt.-I (Commerce-I),Shivkumar Yadav,BAF,FY,Theory,4
+Business Economics-I (B.Eco-I),Siddhi Chitnis,BAF,FY,Theory,4
+Foundation Course-I (FC-I),Siddhi Chitnis,BAF,FY,Theory,4
+Introduction to Financial Management (IFM-I),Swapnil Kharkar,BAF,FY,Theory,4
+Business Economics-II,Ashwini Chavan,BAF,SY,Theory,4
+Information Technology in Accountancy-I,Pranali Dange,BAF,SY,Theory,4
+Financial accounting-III,Rakesh Prajapati,BAF,SY,Theory,4
+Taxation -II,Sarika Gupta,BAF,SY,Theory,4
+Business Law-II,Urmila Jadhav,BAF,SY,Theory,4
+Foundation Course-III,Urmila Jadhav,BAF,SY,Theory,4
+Auditing-II,Vandana Kanojiya,BAF,SY,Theory,4
+Financial Accounting -V,Manisha Chauhan,BAF,TY,Theory,4
+Financial Mgt.,Rakesh Prajapati,BAF,TY,Theory,4
+Taxation,Sarika Gupta,BAF,TY,Theory,4
+Management Application -II,Sarika Gupta,BAF,TY,Theory,4
+Cost Acounting,Swapnil Kharkar,BAF,TY,Theory,4
+Financial Accounting -VI,Vandana Yadav,BAF,TY,Theory,4
+History of Media (HM),Rashmi Mishra,BAMMC,FY,Theory,4
+Visual Communication (VC),Rinku Garu,BAMMC,FY,Theory,4
+Fundamental of Mass Communication (FMC),Siddhi Chitnis,BAMMC,FY,Theory,4
+Foundation Course-I (FC),Siddhi Chitnis,BAMMC,FY,Theory,4
+Effective Communication Skill-I (ECS),Urmila Jadhav,BAMMC,FY,Theory,4
+Current Affairs (CA),Urmila Jadhav,BAMMC,FY,Theory,4
+Media Studies (MS),Rashmi Mishra,BAMMC,SY,Theory,4
+Introduction to photography (ITP),Rashmi Mishra,BAMMC,SY,Theory,4
+Film Communication-I (FLC),Rinku Garu,BAMMC,SY,Theory,4
+Computer Multi Media (C & M),Rinku Garu,BAMMC,SY,Theory,4
+Radio Program Production (RPP),Rinku Garu,BAMMC,SY,Theory,4
+Corporate Communication & Public Relation (CCPR),Vandana Kanojiya,BAMMC,SY,Theory,4
+Advertising Media Research (AMR),Priya Jadhav,BAMMC,TY,Theory,4
+Agency Management (AM),Rashmi Mishra,BAMMC,TY,Theory,4
+Social Media Marketing (SMM),Rinku Garu,BAMMC,TY,Theory,4
+Consumer Behaviour (CB),Rinku Garu,BAMMC,TY,Theory,4
+Brand Building,Shalaka Chavan,BAMMC,TY,Theory,4
+Copy Writing,Vandana Yadav,BAMMC,TY,Theory,4
+Commerce-I (Com-I),Pranali Dange,BCOM,FY,Theory,4
+Accountancy & Financial Management-I(AFM-I),Rakesh Prajapati,BCOM,FY,Theory,4
+Mathematics & Statistical Techniques-I (M&S-I),Rakesh Prajapati,BCOM,FY,Theory,4
+Business Communication-I (BC-I),Shalaka Chavan,BCOM,FY,Theory,4
+Environmental Studies-I (EVS-I),Shivkumar Yadav,BCOM,FY,Theory,4
+Foundation Course-I (FC-I),Siddhi Chitnis,BCOM,FY,Theory,4
+Business Economics-I (B.Eco-I),Siddhi Chitnis,BCOM,FY,Theory,4
+Business Law-I (B. Law-I),Ashwini Chavan,BCOM,SY,Theory,4
+Accountancy & Financial Management-III (AFM-III),Pranali Dange,BCOM,SY,Theory,4
+Advertising-I,Rashmi Mishra,BCOM,SY,Theory,4
+Business Economics-III (B.Eco-III),Shalaka Chavan,BCOM,SY,Theory,4
+Foundation Course-III (FC-III),Shivkumar Yadav,BCOM,SY,Theory,4
+Commerce-III (Com-III),Urmila Jadhav,BCOM,SY,Theory,4
+Managerial Accounting (MA),Vandana Yadav,BCOM,SY,Theory,4
+Business Economics-V,Geeta Deevani,BCOM,TY,Theory,4
+Financial Accounting-V,Manish Chauhan,BCOM,TY,Theory,4
+Export Marketing-I,Pranali Dange,BCOM,TY,Theory,4
+Direct & Indirect Taxation-I,Sarika Gupta,BCOM,TY,Theory,4
+Computer System & Applicaion-I,MP,BCOM,TY,Theory,4
+Commerce-V,Suhas Joshi,BCOM,TY,Theory,4
+Cost Accounting,Swapnil Kharkar,BCOM,TY,Theory,4
+Business Economics-I (B.Eco-I),Ashwini Chavan,BMS,FY,Theory,4
+Foundation Course-I (FC-I),Manisha Chauhan,BMS,FY,Theory,4
+Business Law (B. Law),Priya Jadhav,BMS,FY,Theory,4
+Business Statistics (B. Statistics),Rakesh Prajapati,BMS,FY,Theory,4
+Foundation of Human Skills (FHS),Suhas Joshi,BMS,FY,Theory,4
+Introduction to Financial Accounting (IFA),Swapnil Kharkar,BMS,FY,Theory,4
+Business Communication (BC),Vandana Kanojiya,BMS,FY,Theory,4
+Envt. Mgt-III,Ashwini Chavan,BMS,SY,Theory,4
+ICA/CB/R&S,Manisha Chauhan/Shivkumar Yadav/Suhas Joshi,BMS,SY,Theory,4
+Information Technology in Business management-I,Pranali Dange,BMS,SY,Theory,4
+SM,Shalaka Chavan,BMS,SY,Theory,4
+BPEM,Shivkumar Yadav,BMS,SY,Theory,4
+AMD,Swapnil Kharkar,BMS,SY,Theory,4
+E&D/Advertising/M&L,Vandana Kanojiya/Suhas Joshi/Vandana Yadav,BMS,SY,Theory,4
+Corporate Communication & Public Relation (CCPR),Ashwini Chavan,BMS,TY,Theory,4
+IAPM/CRM/SHRM & HRP,Manisha Chauhan/Priya Jadhav/Suhas Joshi,BMS,TY,Theory,4
+CDM/SDM/HRP&CM,Pranali Dnage/Shalaka Chavan/Priya Jadhv,BMS,TY,Theory,4
+Risk Mgt/IM/IR,Sarika Gupta/Shivkumar Yadav/Urmila Jadhav,BMS,TY,Theory,4
+"Logistics & Supply Chain Mgt.
+",Shalaka Chavan,BMS,TY,Theory,4
+Wealth Mgt/SM/PMCP,Vandana Kanojiya/Priya Jadhav/Vandana Yadav,BMS,TY,Theory,4
+MPMC,Rajnish Prajapati,BScIT,FY,Theory,4
+CGA,Rajnish Prajapati,BScIT,SY,Theory,4
+SIC,Rajnish Prajapati,BScIT,TY,Theory,4
+ITSM,Rajnish Prajapati,BScIT,TY,Theory,4
+MPMC,Rajnish Prajapati,BScIT,FY,Practical,2
+CGA,Rajnish Prajapati,BScIT,SY,Practical,2
+SIC,Rajnish Prajapati,BScIT,TY,Practical,2
+ITSM,Rajnish Prajapati,BScIT,TY,Practical,2
+OOPS,Smita Nair,BScIT,FY,Theory,4
+JAVA,Smita Nair,BScIT,SY,Theory,4
+BI,Smita Nair,BScIT,TY,Theory,4
+OOPS,Smita Nair,BScIT,FY,Practical,2
+JAVA,Smita Nair,BScIT,SY,Practical,2
+BI,Smita Nair,BScIT,TY,Practical,2
+PL SQL,Smita Nair,BScIT,FY,Practical,2
+GREEN IT,Meera Panda,BScIT,FY,Theory,4
+NM,Meera Panda,BScIT,FY,Theory,4
+AM,Meera Panda,BScIT,SY,Theory,4
+SQA,Meera Panda,BScIT,TY,Theory,4
+WAD,Lochan Choudhary,BScIT,FY,Theory,4
+SE,Lochan Choudhary,BScIT,SY,Theory,4
+ES,Lochan Choudhary,BScIT,SY,Theory,4
+GIS,Lochan Choudhary,BScIT,TY,Theory,4
+WAD,Lochan Choudhary,BScIT,FY,Practical,2
+SE,Lochan Choudhary,BScIT,SY,Practical,2
+ES,Lochan Choudhary,BScIT,SY,Practical,2
+GIS,Lochan Choudhary,BScIT,TY,Practical,2
+NM,Meera Panda,BScIT,FY,Practical,2
+AM,Meera Panda,BScIT,SY,Practical,2
