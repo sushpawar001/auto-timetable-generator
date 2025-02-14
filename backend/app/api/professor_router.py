@@ -26,16 +26,17 @@ def get_all_professors(access_token: str = Cookie(None)):
 def get_professors_timetable(access_token: str = Cookie(None)):
     user_id = decode_access_token(access_token)
     subjects = subject_collection.find({"user_id": user_id})
-
-    if not list(subjects):
+    subjects = list(subjects)
+    if not subjects:
         raise HTTPException(status_code=404, detail="No subjects found")
 
 
     department_settings = department_settings_collection.find(
         {"user_id": user_id}, {"_id": 0, "user_id": 0, "practical_slots": 0}
     )
+    department_settings = list(department_settings)
 
-    if not list(department_settings):
+    if not department_settings:
         raise HTTPException(status_code=404, detail="No department settings found")
 
     professors = set(
@@ -46,9 +47,9 @@ def get_professors_timetable(access_token: str = Cookie(None)):
         raise HTTPException(status_code=404, detail="Timetable not found")
 
     timetable = timetable["timetable"]
-    
+
     professors_timetable, max_lecs = create_professors_timetable2(
-        list(professors), timetable, list(department_settings)
+        list(professors), timetable, department_settings
     )
     return {
         "status": "success",

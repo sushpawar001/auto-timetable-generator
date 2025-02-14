@@ -4,6 +4,6 @@ export interface DepartmentSettingsType {
     department: string;
     start_time: string;
     end_time: string;
-    practical_slots: string[];
+    practical_slots: number[];
     minutes_lecture: number;
 }

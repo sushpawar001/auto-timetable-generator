@@ -625,6 +625,8 @@ def get_no_of_lectures(department_settings: dict):
 def get_lecs_by_day_lec_num(day, lec_num, timetable: dict[str, dict[str, list]]):
     lecs = []
     for year, year_data in timetable.items():
+        if lec_num >= len(year_data[day]):
+            continue
         data = year_data[day][lec_num]
         data["department"] = year
         lecs.append(data)

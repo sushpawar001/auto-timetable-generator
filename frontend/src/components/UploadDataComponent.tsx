@@ -79,7 +79,25 @@ export default function UploadDataComponent() {
                 readString(csvData, {
                     header: true,
                     complete: (results) => {
-                        // setJsonData(results.data as JsonResult[]);
+                        const requiredColumns = [
+                            "subject",
+                            "professor",
+                            "department",
+                            "college_year",
+                            "subject_type",
+                            "workload",
+                        ];
+                        const requiredColumnsExist = results.meta.fields.every(
+                            (column) => requiredColumns.includes(column)
+                        );
+                        if (!requiredColumnsExist) {
+                            toast.error(
+                                "File must contain the following columns: " +
+                                    requiredColumns.join(", ")
+                            );
+                            return;
+                        }
+
                         const filteredData = results.data.filter((row) =>
                             Object.values(row).some(
                                 (value) => value !== null && value !== ""
