@@ -36,6 +36,12 @@ export default function SubjectsPage() {
             columnHelper.accessor("subject", {
                 header: () => "Subject",
                 cell: (info) => info.getValue(),
+                filterFn: (row, columnId, filterValue) => {
+                    const subject = row.getValue<string>("subject").toLowerCase();
+                    const professor = row.getValue<string>("professor").toLowerCase();
+                    const searchTerm = filterValue.toLowerCase();
+                    return subject.includes(searchTerm) || professor.includes(searchTerm);
+                }
             }),
             columnHelper.accessor("professor", {
                 header: "Professor",
