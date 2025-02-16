@@ -47,6 +47,29 @@ def get_all_departments(settings: dict[str, dict]) -> list[str]:
     return sorted(list(settings.keys()))
 
 
+def get_remaining_workload(professor_dict: dict[str, dict[str, list]]):
+    """
+    Returns a dictionary of the remaining workload for each professor and subject.
+    """
+    workload_data = []
+    for professor, years in professor_dict.items():
+        for year, subjects in years.items():
+            for subject in subjects:
+                if "workload" in subject:
+
+                    workload_data.append({
+                        "professor": professor,
+                        "year": year.split(" ")[0],
+                        "department": year.split(" ")[1],
+                        "subject": subject["subject"],
+                        "subject_type": subject["type"],
+                        "workload": subject["workload"]
+                    })
+    
+    return workload_data
+
+
+
 def auto_schedule(
     professor_dict: dict[str, dict[str, list]],
     settings: dict[str, dict],
@@ -67,8 +90,9 @@ def auto_schedule(
             year, professor_dict, all_departments, ttlist, settings
         )
 
-    # print(f"{ttlist = }")
-    return ttlist
+    workload_data = get_remaining_workload(professor_dict)
+    # print(f"{workload_data = }")
+    return ttlist, workload_data
 
 
 def generate_year_wise_schedule(

@@ -1,3 +1,4 @@
+from pymongo import UpdateOne
 from app.db.config import (
     department_settings_collection,
     subject_collection,
@@ -38,15 +39,32 @@ def create_timetable(user_id: str):
     formatted_settings = convert_data_format_settings(department_settings)
     formatted_tt_data = convert_data_format_tt(subjects)
 
-    timetable = auto_schedule(formatted_tt_data, formatted_settings)
+    timetable, workload_data = auto_schedule(formatted_tt_data, formatted_settings)
 
-    return timetable
+    return timetable, workload_data
 
 
 def store_timetable(user_id: str, timetable: dict):
     timetable_collection.delete_many({"user_id": user_id})
     timetable_collection.insert_one({"user_id": user_id, "timetable": timetable})
 
+
+def update_remaining_workload(user_id, workload_data):
+    update_operations = [
+        UpdateOne(
+            {
+                "user_id": user_id,
+                "college_year": workload_data["year"],
+                "department": workload_data["department"],
+                "subject": workload_data["subject"],
+                "subject_type": workload_data["subject_type"],
+                "professor": workload_data["professor"],
+            },
+            {"$set": {"remaining_workload": workload_data["workload"]}},
+        )
+        for workload_data in workload_data
+    ]
+    res = subject_collection.bulk_write(update_operations)
 
 def create_timetable_ga(user_id: str):
 
