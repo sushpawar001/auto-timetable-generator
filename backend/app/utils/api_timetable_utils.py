@@ -1,3 +1,4 @@
+from bson import ObjectId
 from pymongo import UpdateOne
 from app.db.config import (
     department_settings_collection,
@@ -32,7 +33,7 @@ def create_timetable(user_id: str):
         {"user_id": user_id}, {"_id": 0, "user_id": 0}
     )
     department_settings = list(department_settings)
-    
+
     if not department_settings:
         raise ValueError(f"No department settings found for given user")
 
@@ -40,8 +41,9 @@ def create_timetable(user_id: str):
     formatted_tt_data = convert_data_format_tt(subjects)
 
     timetable, workload_data = auto_schedule(formatted_tt_data, formatted_settings)
+    subject_updates = get_workload_subject_updates(subjects, workload_data)
 
-    return timetable, workload_data
+    return timetable, subject_updates
 
 
 def store_timetable(user_id: str, timetable: dict):
@@ -49,22 +51,60 @@ def store_timetable(user_id: str, timetable: dict):
     timetable_collection.insert_one({"user_id": user_id, "timetable": timetable})
 
 
-def update_remaining_workload(user_id, workload_data):
+# TODO: Come up with better solution for updating remaining workload of optional subjects
+def update_remaining_workload_in_db(user_id, subject_updates):
     update_operations = [
         UpdateOne(
             {
+                "_id": ObjectId(subject_update["_id"]),
                 "user_id": user_id,
-                "college_year": workload_data["year"],
-                "department": workload_data["department"],
-                "subject": workload_data["subject"],
-                "subject_type": workload_data["subject_type"],
-                "professor": workload_data["professor"],
             },
-            {"$set": {"remaining_workload": workload_data["workload"]}},
+            {"$set": {"remaining_workload": subject_update["remaining_workload"]}},
         )
-        for workload_data in workload_data
+        for subject_update in subject_updates
     ]
     res = subject_collection.bulk_write(update_operations)
+
+
+def get_workload_subject_updates(subjects, after_update_workload):
+    # Create a lookup dictionary for faster access
+    workload_lookup = {
+        f"{item['professor']}_{item['subject']}": item["workload"]
+        for item in after_update_workload
+    }
+
+    updates = []
+    for subject in subjects:
+        if "/" in subject["subject"]:
+            subject_names = subject["subject"].split("/")
+            professor_names = subject["professor"].split("/")
+
+            # Sum workload for all optional variants
+            total_workload = min(
+                workload_lookup.get(f"{prof}_{subj}", 0)
+                for prof, subj in zip(professor_names, subject_names)
+            )
+
+            updates.append(
+                {
+                    "_id": subject["_id"],
+                    "remaining_workload": total_workload,
+                }
+            )
+        else:
+            # Handle regular subjects
+            new_workload = workload_lookup.get(
+                f"{subject['professor']}_{subject['subject']}", 0
+            )
+            updates.append(
+                {
+                    "_id": subject["_id"],
+                    "remaining_workload": new_workload,
+                }
+            )
+
+    return updates
+
 
 def create_timetable_ga(user_id: str):
 
@@ -175,7 +215,7 @@ def create_timetable_ai(user_id: str, execution_time_seconds: int = 30):
     INITIAL_TEMPERATURE = 2000.0
     COOLING_RATE = 0.995
     NUM_ITERATIONS = 1500
-    
+
     subjects = subject_collection.find({"user_id": user_id})
     subjects_list = list(subjects)
 
@@ -191,7 +231,6 @@ def create_timetable_ai(user_id: str, execution_time_seconds: int = 30):
         raise ValueError(f"No department settings found for given user")
 
     formatted_settings = convert_data_format_settings(list(department_settings))
-
 
     professors = set(
         split_strip_strings([subject["professor"] for subject in subjects_list])

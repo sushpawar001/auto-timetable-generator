@@ -63,6 +63,13 @@ export default function SubjectsPage() {
                 header: "Workload",
                 cell: (info) => info.getValue(),
             }),
+            columnHelper.accessor("remaining_workload", {
+                header: "Remaining Workload",
+                cell: (info) => {
+                    const remainingWorkload = info.getValue();
+                    return remainingWorkload ?? "-";
+                },
+            }),
             columnHelper.accessor("_id", {
                 header: "Action",
                 cell: ({ cell }) => (

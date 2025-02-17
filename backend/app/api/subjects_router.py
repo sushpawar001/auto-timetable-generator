@@ -9,7 +9,7 @@ from typing import List
 from app.utils.api_timetable_utils import (
     create_timetable,
     store_timetable,
-    update_remaining_workload,
+    update_remaining_workload_in_db,
 )
 from app.db.config import timetable_collection
 
@@ -76,9 +76,9 @@ async def update_subject(
 
     result["_id"] = str(result["_id"])
 
-    timetable, workload_data = create_timetable(user_id)
+    timetable, subject_updates = create_timetable(user_id)
     store_timetable(user_id, timetable)
-    update_remaining_workload(user_id, workload_data)
+    update_remaining_workload_in_db(user_id, subject_updates)
 
     return {"status": "success", "data": result}
 
@@ -94,9 +94,9 @@ async def delete_subject(subject_id: str, access_token: str = Cookie()):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Subject not found")
 
-    timetable, workload_data = create_timetable(user_id)
+    timetable, subject_updates = create_timetable(user_id)
     store_timetable(user_id, timetable)
-    update_remaining_workload(user_id, workload_data)
+    update_remaining_workload_in_db(user_id, subject_updates)
 
     return {"status": "success"}
 
@@ -166,9 +166,9 @@ async def get_csv_data(subjects: List[SubjectModelInput], access_token: str = Co
         department_settings
     )
 
-    timetable, workload_data = create_timetable(user_id)
+    timetable, subject_updates = create_timetable(user_id)
     store_timetable(user_id, timetable)
-    update_remaining_workload(user_id, workload_data)
+    update_remaining_workload_in_db(user_id, subject_updates)
 
     if subject_result.acknowledged and department_settings_result.acknowledged:
         return {"status": "success"}

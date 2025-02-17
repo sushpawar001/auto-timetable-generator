@@ -6,5 +6,6 @@ export interface Subject {
     college_year: string;
     subject_type: string;
     workload: number;
+    remaining_workload?: number;
     user_id: string;
 }

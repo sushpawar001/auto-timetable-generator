@@ -5,7 +5,7 @@ from app.utils.api_timetable_utils import (
     create_timetable,
     store_timetable,
     create_timetable_ai,
-    update_remaining_workload,
+    update_remaining_workload_in_db,
 )
 from app.utils.auto_schedule import tt_score_calc
 from app.models.timetable_model import (
@@ -37,12 +37,12 @@ async def generate_timetable(access_token: str = Cookie()) -> GenerateTimetableM
 
     user_id = decode_access_token(access_token)
     try:
-        timetable, workload_data = create_timetable(user_id)
+        timetable, subject_updates = create_timetable(user_id)
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
 
     store_timetable(user_id, timetable)
-    update_remaining_workload(user_id, workload_data)
+    update_remaining_workload_in_db(user_id, subject_updates)
 
     return GenerateTimetableModel(timetable=timetable)
 
