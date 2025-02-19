@@ -10,6 +10,8 @@ import {
     getFacetedRowModel,
     getFacetedUniqueValues,
     Table,
+    getSortedRowModel,
+    SortingState,
 } from "@tanstack/react-table";
 import { LuPenSquare, LuTrash2, LuRotateCcw } from "react-icons/lu";
 
@@ -25,6 +27,7 @@ const columnHelper = createColumnHelper<Subject>();
 export default function SubjectsPage() {
     const [subjects, setSubjects] = useState<Subject[]>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [sorting, setSorting] = useState<SortingState>([]);
     const navigate = useNavigate();
     const columns = useMemo(
         () => [
@@ -105,8 +108,11 @@ export default function SubjectsPage() {
         getFilteredRowModel: getFilteredRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
+        getSortedRowModel: getSortedRowModel(),
+        onSortingChange: setSorting,
         state: {
             columnFilters,
+            sorting,
         },
     });
 
@@ -255,15 +261,21 @@ export function SubjectsTable({ table }: { table: Table<Subject> }) {
                                 return (
                                     <th
                                         key={header.id}
-                                        className="p-1 ~px-1/2 text-center ~text-xs/base font-bold bg-gray-500 text-white h-10 font-custom"
+                                        className="p-1 ~px-1/2 text-center ~text-xs/base font-bold bg-gray-500 text-white h-10 font-custom cursor-pointer select-none"
+                                        onClick={header.column.getToggleSortingHandler()}
                                     >
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                  header.column.columnDef
-                                                      .header,
-                                                  header.getContext()
-                                              )}
+                                        {header.isPlaceholder ? null : (
+                                            <div className="flex items-center justify-center gap-1">
+                                                {flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                                {{
+                                                    asc: " 🔼",
+                                                    desc: " 🔽",
+                                                }[header.column.getIsSorted() as string] ?? null}
+                                            </div>
+                                        )}
                                     </th>
                                 );
                             })}
