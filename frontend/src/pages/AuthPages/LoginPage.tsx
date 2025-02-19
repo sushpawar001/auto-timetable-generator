@@ -10,29 +10,83 @@ export default function LoginPage() {
         email: "",
         password: "",
     });
+    const [errors, setErrors] = useState({
+        email: "",
+        password: "",
+    });
     const navigate = useNavigate();
 
     const setUserId  = userUserStore((state) => state.setUserId);
     const userId = userUserStore((state) => state.userId);
 
+    const validateForm = () => {
+        let isValid = true;
+        const newErrors = {
+            email: "",
+            password: "",
+        };
+
+        // Email validations
+        if (!form.email) {
+            newErrors.email = "Email is required";
+            isValid = false;
+        } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+            newErrors.email = "Please enter a valid email address";
+            isValid = false;
+        }
+
+        // Password validation
+        if (!form.password) {
+            newErrors.password = "Password is required";
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
     const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
+        // Clear error when user starts typing
+        if (errors[name as keyof typeof errors]) {
+            setErrors({
+                ...errors,
+                [name]: "",
+            });
+        }
     };
 
     const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(form);
-        const response = await axios.post(
-            `${import.meta.env.VITE_BACKEND_URL}/login`,
-            form,
-            { withCredentials: true }
-        );
-        console.log(response);
-        setUserId(response.data["user_id"]);
+        
+        if (!validateForm()) {
+            return;
+        }
 
-        if (response.status === 200) {
-            navigate("/");
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/login`,
+                form,
+                { withCredentials: true }
+            );
+            setUserId(response.data["user_id"]);
+
+            if (response.status === 200) {
+                navigate("/");
+            }
+        } catch (error: any) {
+            if (error.response?.status === 400) {
+                setErrors({
+                    email: "Invalid email or password",
+                    password: "Invalid email or password",
+                });
+            } else {
+                setErrors({
+                    email: "An error occurred. Please try again later.",
+                    password: "",
+                });
+            }
         }
     };
 
@@ -60,12 +114,17 @@ export default function LoginPage() {
                         <input
                             type="text"
                             name="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
+                            className={`bg-gray-50 border ${
+                                errors.email ? 'border-red-500' : 'border-gray-300'
+                            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5`}
                             placeholder="name@mail.com"
                             value={form.email}
                             onChange={inputHandler}
                         />
                     </div>
+                    {errors.email && (
+                        <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                    )}
                 </div>
                 <div className="mb-6">
                     <label
@@ -81,12 +140,17 @@ export default function LoginPage() {
                         <input
                             type="password"
                             name="password"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
+                            className={`bg-gray-50 border ${
+                                errors.password ? 'border-red-500' : 'border-gray-300'
+                            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5`}
                             placeholder="password"
                             value={form.password}
                             onChange={inputHandler}
                         />
                     </div>
+                    {errors.password && (
+                        <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+                    )}
                 </div>
                 <div className="mb-2">
                     <button
