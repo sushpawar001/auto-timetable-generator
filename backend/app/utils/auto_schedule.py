@@ -18,7 +18,7 @@ def create_timetable_struct(all_years: list[str]) -> dict[str, dict[str, list]]:
 
 
 def get_all_years_with_optionals(
-    professor_dict: dict[str, dict[str, list]]
+    professor_dict: dict[str, dict[str, list]],
 ) -> list[str]:
     """
     Returns a sorted list according to the number of optionals in all years.
@@ -57,17 +57,18 @@ def get_remaining_workload(professor_dict: dict[str, dict[str, list]]):
             for subject in subjects:
                 if "workload" in subject:
 
-                    workload_data.append({
-                        "professor": professor,
-                        "year": year.split(" ")[0],
-                        "department": year.split(" ")[1],
-                        "subject": subject["subject"],
-                        "subject_type": subject["type"],
-                        "workload": subject["workload"]
-                    })
-    
-    return workload_data
+                    workload_data.append(
+                        {
+                            "professor": professor,
+                            "year": year.split(" ")[0],
+                            "department": year.split(" ")[1],
+                            "subject": subject["subject"],
+                            "subject_type": subject["type"],
+                            "workload": subject["workload"],
+                        }
+                    )
 
+    return workload_data
 
 
 def auto_schedule(
@@ -305,6 +306,35 @@ def check_professor_available(
     all_busy_professors = split_strip_strings(busy_professors)
 
     return [teacher for teacher in profs.keys() if teacher not in all_busy_professors]
+
+
+def check_professor_available_for_department(
+    lec_num: int, day: str, ttlist: dict, dept_professors: list[str]
+) -> list[str]:
+    """
+    Checks the availability of professors for a specific lecture number and day from timetable.
+
+    Args:
+        lec_num (int): The lecture number to check
+        day (str): The day of the week to check availability for
+
+    Returns:
+        list: A list of professor names that are available for the given lecture number and day
+    """
+
+    busy_professors = []
+
+    # finding which lecture at specified lec number
+    for year in ttlist.keys():
+        scheduled_lectures: list = ttlist[year][day]
+        # number of scheduled lecture can't be less than lec number
+        if len(scheduled_lectures) - 1 >= lec_num:
+            busy_professors.append(scheduled_lectures[lec_num]["professor"])
+    all_busy_professors = split_strip_strings(busy_professors)
+
+    return [
+        teacher for teacher in dept_professors if teacher not in all_busy_professors
+    ]
 
 
 def split_strip_strings(input_string_list: list[str]) -> list[str]:

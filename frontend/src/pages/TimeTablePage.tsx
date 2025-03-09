@@ -9,11 +9,21 @@ type subjectType = {
     professor: string;
 };
 
+interface FreeProfessors {
+    Mon: string[][];
+    Tue: string[][];
+    Wed: string[][];
+    Thurs: string[][];
+    Fri: string[][];
+    Sat: string[][];
+}
+
 export default function TimeTablePage() {
     const [timeTable, setTimeTable] = useState<Timetable>();
     const [filteredTimeTable, setFilteredTimeTable] = useState<Timetable>();
     const [departments, setDepartments] = useState<string[]>([]);
     const [selectedDepartment, setSelectedDepartment] = useState("");
+    const [freeProfessors, setFreeProfessors] = useState<FreeProfessors>();
 
     const [numberOfLectures, setNumberOfLectures] = useState(0);
     const [searchTerm, setSearchTerm] = useState("");
@@ -23,13 +33,29 @@ export default function TimeTablePage() {
             `${import.meta.env.VITE_BACKEND_URL}/timetable/get_timetable`,
             { withCredentials: true }
         );
-        console.log(response.data.timetable);
+        // console.log(response.data.timetable);
         setDepartments(Object.keys(response.data.timetable).sort());
         setTimeTable(response.data.timetable);
         if (selectedDepartment === "") {
             setSelectedDepartment(Object.keys(response.data.timetable)[0]);
         }
     };
+
+    useEffect(() => {
+        const getFreeProfessors = async () => {
+            const response = await axios.get(
+                `${
+                    import.meta.env.VITE_BACKEND_URL
+                }/professors/free-slot?department=${selectedDepartment}`,
+                { withCredentials: true }
+            );
+            console.log(response.data.free_professors);
+            setFreeProfessors(response.data.free_professors);
+        };
+        if (selectedDepartment !== "") {
+            getFreeProfessors();
+        }
+    }, [selectedDepartment]);
 
     useEffect(() => {
         getTimeTable();
@@ -71,7 +97,9 @@ export default function TimeTablePage() {
                         <button
                             onClick={() => {
                                 setSearchTerm("");
-                                const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+                                const searchInput = document.querySelector(
+                                    'input[type="text"]'
+                                ) as HTMLInputElement;
                                 if (searchInput) searchInput.value = "";
                             }}
                             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
@@ -169,7 +197,8 @@ export function TimeTableComponent({
                                     const subObj = filteredTimeTable[day][i];
                                     const isFreeLecture =
                                         subObj["subject"] === "Empty Slot";
-                                    const isHighlighted = !isFreeLecture && matchesSearch(subObj);
+                                    const isHighlighted =
+                                        !isFreeLecture && matchesSearch(subObj);
 
                                     return (
                                         <td
@@ -187,8 +216,16 @@ export function TimeTableComponent({
                                                     Free Lecture
                                                 </p>
                                             ) : (
-                                                <div className={`${isHighlighted ? "font-medium" : ""}`}>
-                                                    <SubjectSlot data={subObj} />
+                                                <div
+                                                    className={`${
+                                                        isHighlighted
+                                                            ? "font-medium"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    <SubjectSlot
+                                                        data={subObj}
+                                                    />
                                                 </div>
                                             )}
                                         </td>
