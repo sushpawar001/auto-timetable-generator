@@ -18,6 +18,7 @@ interface FreeProfessors {
     Sat: string[][];
 }
 
+
 export default function TimeTablePage() {
     const [timeTable, setTimeTable] = useState<Timetable>();
     const [filteredTimeTable, setFilteredTimeTable] = useState<Timetable>();
@@ -132,6 +133,7 @@ export default function TimeTablePage() {
                             numberOfLectures={numberOfLectures}
                             filteredTimeTable={filteredTimeTable!}
                             searchTerm={searchTerm}
+                            freeProfessors={freeProfessors!}
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center text-2xl">
@@ -158,10 +160,12 @@ export function TimeTableComponent({
     numberOfLectures,
     filteredTimeTable,
     searchTerm,
+    freeProfessors,
 }: {
     numberOfLectures: number;
     filteredTimeTable: Timetable;
     searchTerm: string;
+    freeProfessors: FreeProfessors;
 }) {
     const matchesSearch = (subObj: subjectType) => {
         if (!searchTerm) return false;
@@ -212,9 +216,14 @@ export function TimeTableComponent({
                                             key={day + "-" + i}
                                         >
                                             {isFreeLecture ? (
-                                                <p className="text-sm font-medium text-gray-400">
-                                                    Free Lecture
-                                                </p>
+                                                <div
+                                                    className="tooltip tooltip-left w-full h-full flex items-center justify-center"
+                                                    data-tip={freeProfessors[day][i].join("-\n")}
+                                                >
+                                                    <p className="text-sm font-medium text-gray-400">
+                                                        Free Lecture
+                                                    </p>
+                                                </div>
                                             ) : (
                                                 <div
                                                     className={`${
