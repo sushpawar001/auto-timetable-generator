@@ -1,10 +1,8 @@
-import time
-from bson import ObjectId
-from fastapi import APIRouter, HTTPException, Cookie
-from typing import List
 from app.db.config import department_settings_collection
-from app.utils.auth_helpers import decode_access_token
 from app.models.subject_model import DepartmentSettingsInput
+from app.utils.auth_helpers import decode_access_token
+from bson import ObjectId
+from fastapi import APIRouter, Cookie, HTTPException
 
 department_router = APIRouter()
 

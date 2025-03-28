@@ -1,16 +1,14 @@
-from fastapi import APIRouter, HTTPException, Cookie
 from app.db.config import timetable_collection
-from app.utils.auth_helpers import decode_access_token
+from app.models.timetable_model import GenerateTimetableModel
 from app.utils.api_timetable_utils import (
     create_timetable,
-    store_timetable,
     create_timetable_ai,
+    store_timetable,
     update_remaining_workload_in_db,
 )
+from app.utils.auth_helpers import decode_access_token
 from app.utils.auto_schedule import tt_score_calc
-from app.models.timetable_model import (
-    GenerateTimetableModel,
-)
+from fastapi import APIRouter, Cookie, HTTPException
 
 timetable_router = APIRouter(prefix="/timetable", tags=["timetable"])
 

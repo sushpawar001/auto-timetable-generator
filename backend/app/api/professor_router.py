@@ -1,18 +1,15 @@
-import json
-from fastapi import APIRouter, HTTPException, Cookie
 from app.db.config import (
-    subject_collection,
     department_settings_collection,
+    subject_collection,
     timetable_collection,
 )
 from app.utils.auth_helpers import decode_access_token
-from bson.objectid import ObjectId
 from app.utils.auto_schedule import (
-    check_professor_available,
     check_professor_available_for_department,
     create_professors_timetable2,
     split_strip_strings,
 )
+from fastapi import APIRouter, Cookie, HTTPException
 
 professor_router = APIRouter()
 

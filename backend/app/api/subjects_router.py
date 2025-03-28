@@ -1,17 +1,20 @@
-from fastapi import APIRouter, HTTPException, Cookie
-from pymongo import ReturnDocument
-from app.db.config import subject_collection, department_settings_collection
-from app.models.subject_model import SubjectModelInput
-from app.utils.auth_helpers import decode_access_token
-from bson.objectid import ObjectId
-from app.models.subject_model import SubjectModelInput, DepartmentSettings
 from typing import List
+
+from app.db.config import (
+    department_settings_collection,
+    subject_collection,
+    timetable_collection,
+)
+from app.models.subject_model import DepartmentSettings, SubjectModelInput
 from app.utils.api_timetable_utils import (
     create_timetable,
     store_timetable,
     update_remaining_workload_in_db,
 )
-from app.db.config import timetable_collection
+from app.utils.auth_helpers import decode_access_token
+from bson.objectid import ObjectId
+from fastapi import APIRouter, Cookie, HTTPException
+from pymongo import ReturnDocument
 
 subjects_router = APIRouter()
 

@@ -1,12 +1,10 @@
-from fastapi import FastAPI, Request, HTTPException, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from app.api.timetable_router import timetable_router
 from app.api.auth import auth_router
-from app.api.professor_router import professor_router
-from starlette.middleware.base import BaseHTTPMiddleware
-from app.api.subjects_router import subjects_router
 from app.api.department_router import department_router
+from app.api.professor_router import professor_router
+from app.api.subjects_router import subjects_router
+from app.api.timetable_router import timetable_router
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
 app = FastAPI()
